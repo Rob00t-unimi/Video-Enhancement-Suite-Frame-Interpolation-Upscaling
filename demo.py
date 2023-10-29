@@ -18,27 +18,35 @@ def bilinear_upscale(input_image, zoom_factor):
         new_image = np.zeros((new_height, new_width, img.shape[2]), dtype=np.uint8)
 
         # Riempie la nuova immagine con i pixel interpolati dall'immagine di input
+        for y in range(new_height):
+            for x in range(new_width):
+                # Calcola le coordinate nell'immagine di input
+                xi = x / zoom_factor
+                yi = y / zoom_factor
 
-        #data la posizione O(xo,yo) della nuova immagine il corrispondente nell'immagine in input I(xi,yi)
-        #viene cosi calcolato (xi, yi) = (xo/zoom_factor, yo/zoom_factor)
-        #una volta trovati il corripondente (xi,yi) posso calcolare quali sono i suoi vicini ovvero
-        #xI0= int(xI)   -->  (xI0, yI0)
-        #xI1= xI0+ 1    -->  (xI1, yI0)
-        #yI0= int(yI)   -->  (xI0, yI1)
-        #yI1= yI0+ 1    -->  (xI1, yI1)
+                # Calcola i quattro punti più vicini nell'immagine di input
+                xi0 = int(xi)
+                xi1 = min(xi0 + 1, img.shape[1] - 1)
+                yi0 = int(yi)
+                yi1 = min(yi0 + 1, img.shape[0] - 1)
 
-        #l'interpolazione viene cosi calcolata:
-        #I0 = I(xI0, yI0) ⋅ (xI1 − xI) + I(xI1, yI0) ⋅ (xI − xI0)
-        #I1 = I(xI0, yI1) ⋅ (xI1 − xI) + I(xI1, yI1) ⋅ (xI − xI0)
-        #O(xO, yO) = I0 ⋅ (yI1 − yI) + I1 ⋅ (yI − yI0)
+                # Calcola i pesi per l'interpolazione
+                dx = xi - xi0
+                dy = yi - yi0
+
+                # Esegue l'interpolazione bilineare
+                I0 = img[yi0, xi0] * (1 - dx) + img[yi0, xi1] * dx
+                I1 = img[yi1, xi0] * (1 - dx) + img[yi1, xi1] * dx
+                new_image[y, x] = I0 * (1 - dy) + I1 * dy
 
         return new_image
     else:
         print("Impossibile leggere l'immagine di input.")
         return None
 
-
-upscaledImage = bilinear_upscale(frame, zoom_factor)
+#doppio upscaling
+newImage = bilinear_upscale(frame, zoom_factor)
+upscaledImage = bilinear_upscale(newImage, zoom_factor)
 
 
 if upscaledImage is not None:
