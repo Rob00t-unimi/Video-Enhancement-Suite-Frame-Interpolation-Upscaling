@@ -53,11 +53,13 @@ def bilinear_upscale (framePath, zoom_factor, num):
     if upscaledImage is not None:
 
         # Applica il filtro bilaterale a upscaledImage
-        bilateral_filtered_image = cv2.bilateralFilter(upscaledImage, d=11, sigmaColor=150, sigmaSpace=150)
+        bilateral_filtered_image = cv2.bilateralFilter(upscaledImage, d=9, sigmaColor=150, sigmaSpace=150)
 
         # Applica il miglioramento della nitidezza (sharpening) con il filtro Unsharp Mask 
         sharpened_image = cv2.addWeighted(upscaledImage, 0.5, bilateral_filtered_image, 0.5, 0)
 
-        cv2.imwrite("progetto-principi/materials/output/img_upscaledBilinear"+str(num)+".png", sharpened_image)  # Salva l'immagine elaborata su disco
+        cv2.imwrite("progetto-principi/materials/output/upscaling/bilinear/img_upscaledBilinear"+str(num)+".png", upscaledImage)  # Salva l'immagine elaborata su disco
+        cv2.imwrite("progetto-principi/materials/output/upscaling/bilinear/img_upscaledBilinear_bilateral"+str(num)+".png", bilateral_filtered_image)  # Salva l'immagine elaborata su disco
+        cv2.imwrite("progetto-principi/materials/output/upscaling/bilinear/img_upscaledBilinear_bilateral_sharpened"+str(num)+".png", sharpened_image)  # Salva l'immagine elaborata su disco
     
-    return frame, bilateral_filtered_image, sharpened_image
+    return frame, upscaledImage, bilateral_filtered_image, sharpened_image

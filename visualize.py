@@ -1,9 +1,9 @@
 import cv2
 import matplotlib.pyplot as plt
 
-def visualizeUpscaledImages(original1, up_bi1, up_bi_sharp1, original2, up_bi2, up_bi_sharp2):
+def visualizeUpscaledImages(original1, up_img1, up_bi1, up_bi_sharp1, original2, up_img2, up_bi2, up_bi_sharp2):
     
-    if original1 is not None and up_bi1 is not None and up_bi_sharp1 is not None:
+    if original1 is not None and up_bi1 is not None and up_bi_sharp1 is not None and up_img1 is not None:
                 
                 plt.figure(figsize=(12, 8))
                 
@@ -11,6 +11,11 @@ def visualizeUpscaledImages(original1, up_bi1, up_bi_sharp1, original2, up_bi2, 
                 plt.imshow(cv2.cvtColor(original1, cv2.COLOR_BGR2RGB))
                 plt.title("Immagine Originale")
                 plt.axis('off')
+
+                #plt.subplot(232)  
+                #plt.imshow(cv2.cvtColor(up_img1, cv2.COLOR_BGR2RGB))
+                #plt.title("Upscaling")
+                #plt.axis('off')
 
                 plt.subplot(232)  
                 plt.imshow(cv2.cvtColor(up_bi1, cv2.COLOR_BGR2RGB))
@@ -22,12 +27,17 @@ def visualizeUpscaledImages(original1, up_bi1, up_bi_sharp1, original2, up_bi2, 
                 plt.title("Upscaled-BilateralFilter-sharpening")
                 plt.axis('off')
 
-                if original2 is not None and up_bi2 is not None and up_bi_sharp2 is not None:
+                if original2 is not None and up_bi2 is not None and up_bi_sharp2 is not None and up_img2 is not None:
 
                     plt.subplot(234)  
                     plt.imshow(cv2.cvtColor(original2, cv2.COLOR_BGR2RGB))
                     plt.title("Immagine Originale")
                     plt.axis('off')
+
+                    #plt.subplot(235)  
+                    #plt.imshow(cv2.cvtColor(up_img2, cv2.COLOR_BGR2RGB))
+                    #plt.title("Upscaling")
+                    #plt.axis('off')
 
                     plt.subplot(235)  
                     plt.imshow(cv2.cvtColor(up_bi2, cv2.COLOR_BGR2RGB))
