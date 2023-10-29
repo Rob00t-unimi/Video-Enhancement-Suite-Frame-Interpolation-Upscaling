@@ -44,9 +44,8 @@ def bilinear_upscale(input_image, zoom_factor):
         print("Impossibile leggere l'immagine di input.")
         return None
 
-#doppio upscaling
-newImage = bilinear_upscale(frame, zoom_factor)
-upscaledImage = bilinear_upscale(newImage, zoom_factor)
+
+upscaledImage = bilinear_upscale(frame, zoom_factor)
 
 
 if upscaledImage is not None:
