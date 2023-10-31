@@ -6,8 +6,8 @@ from videoFrameUpscaling import video_upscaling
 import msvcrt
 
 #Video Upscaling
-input_video_path = "materials/stockVideos/short_480p_10fps.mp4"  # Sostituisci con il percorso del tuo video di input
-output_video_path = "materials/output/VideoProcessing/VideoUpscaling/upscaledVideo.avi"  # Sostituisci con il percorso in cui desideri salvare il video di output
+input_video_path = "materials/stockVideos/short_480p_10fps.mp4"  
+output_video_path = "materials/output/VideoProcessing/VideoUpscaling/upscaledVideo.avi"  
 zoom_factor = 1.5  # fattore di upscaling desiderato
 iterazioniUpscaling = 1 # numero di volte in cui viene eseguito l'upscaling sullo stesso frame
 
