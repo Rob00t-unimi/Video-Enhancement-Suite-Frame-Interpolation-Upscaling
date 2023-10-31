@@ -3,7 +3,7 @@ import scipy
 import cv2
 import matplotlib.pyplot as plt
 from imageProcessing.BicubicUpscaling import bicubic_upscale
-from imageProcessing.BilinearUpscaling import bilinear_upscale
+from BilinearUpscaling import bilinear_upscale
 from imageProcessing.visualize import visualizeUpscaledImages
 from videoFrameInterpolation import frameInterpolation
 

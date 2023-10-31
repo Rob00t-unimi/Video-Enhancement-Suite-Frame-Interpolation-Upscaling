@@ -2,9 +2,9 @@ import cv2
 import numpy as np
 import os
 
-def frameInterpolation(video_name):
+def frameInterpolation(input_video_path, output_video_path):
 
-    capture = cv2.VideoCapture(video_name)
+    capture = cv2.VideoCapture(input_video_path)
 
     if not capture.isOpened():
         print("ERROR: Failed to open the video")
@@ -32,7 +32,7 @@ def frameInterpolation(video_name):
 
     # Set del writer del nuovo video con codec XVID, captures e frame size calcolate
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter("materials/output/FrameInterpolation/Videos/InterpolatedVideo.avi", fourcc, finalFps, frame_size, isColor=True)
+    out = cv2.VideoWriter(output_video_path, fourcc, finalFps, frame_size, isColor=True)
 
     prev_frame = None   # parto dal primo frame quindi setto il precedente a None
 
@@ -47,7 +47,7 @@ def frameInterpolation(video_name):
     def loopState(num):
         os.system('cls' if os.name == 'nt' else 'clear')
         printInfo()
-        print("Progress: {:.2f}%".format(num / tot_finalFrames * 100))
+        print("Frame Interpolation: {:.2f}%".format(num / tot_finalFrames * 100))
 
     state = 0
 
@@ -98,7 +98,7 @@ def frameInterpolation(video_name):
     out.release()
 
     # Richiedo le capture del video appena creato e stampo le informazioni che voglio vedere
-    capture = cv2.VideoCapture("progetto-principi/materials/output/FrameInterpolation/Videos/InterpolatedVideo.avi")
+    capture = cv2.VideoCapture(output_video_path)
     print("EXPORT fps: ", int(capture.get(cv2.CAP_PROP_FPS)), ", frames: " , int(capture.get(cv2.CAP_PROP_FRAME_COUNT)), " sec: " , int(capture.get(cv2.CAP_PROP_FRAME_COUNT)) / int(capture.get(cv2.CAP_PROP_FPS)))
 
-    print("Completed")
+    print("Frame Interpolation Completed.")

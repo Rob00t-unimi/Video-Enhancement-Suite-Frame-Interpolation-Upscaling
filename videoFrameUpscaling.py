@@ -1,14 +1,24 @@
 import cv2
+from BilinearUpscaling import bilinear_upscale
+import os
 
-def process_video(input_video_path, output_video_path, zoom_factor):
-    # Apri il video di input
+def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIterations):
+
+    # Apri la capture del video
     cap = cv2.VideoCapture(input_video_path)
+    frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+    # Funzione per stampare la % di export
+    def loopState(num):
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print("Video Upscaling: {:.2f}%".format(num / frame_count * 100))
+        print("Elaborated frames: ", num , "/", frame_count)
 
     if not cap.isOpened():
         print("Impossibile aprire il video di input.")
         return
 
-    # Leggi le dimensioni del video
+    # Legge le dimensioni dei frame del video
     frame_width = int(cap.get(3))
     frame_height = int(cap.get(4))
 
@@ -16,31 +26,30 @@ def process_video(input_video_path, output_video_path, zoom_factor):
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     out = cv2.VideoWriter(output_video_path, fourcc, 20.0, (frame_width, frame_height))
 
-    frame_num = 0
-
+    # Cicla su ogni frame del video
+    state = 0
     while True:
+        if state == 0:
+            loopState(0)
         ret, frame = cap.read()
 
         if not ret:
             break
-
-        # Applica la tua funzione di upscaling al frame
-        upscaled_frame, _, _, _ = bilinear_upscale(frame, zoom_factor, frame_num)
+        
+        # in base a upscaleIterations esegue una o più volte l'upscaling al frame selezionato
+        tmp = frame
+        for _ in range(upscaleIterations):
+            # Applica la tua funzione di upscaling al frame
+            upscaled_frame = bilinear_upscale(tmp, zoom_factor)
+            tmp = upscaled_frame
 
         # Scrivi il frame elaborato nel video di output
-        out.write(upscaled_frame)
+        out.write(tmp)
+        state += 1
+        loopState(state)
 
-        frame_num += 1
-
-    # Rilascia le risorse
+    # Rilascia la capture
     cap.release()
     out.release()
 
-    print("Elaborazione del video completata.")
-
-if __name__ == "__main__":
-    input_video_path = "input_video.mp4"  # Sostituisci con il percorso del tuo video di input
-    output_video_path = "output_video.mp4"  # Sostituisci con il percorso in cui desideri salvare il video di output
-    zoom_factor = 2.0  # Sostituisci con il tuo fattore di upscaling desiderato
-
-    process_video(input_video_path, output_video_path, zoom_factor)
+    print("Upscaling Completed.")

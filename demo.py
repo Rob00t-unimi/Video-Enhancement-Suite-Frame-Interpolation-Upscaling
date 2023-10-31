@@ -3,9 +3,10 @@ import scipy
 import cv2
 import matplotlib.pyplot as plt
 from imageProcessing.BicubicUpscaling import bicubic_upscale
-from imageProcessing.BilinearUpscaling import bilinear_upscale
+from BilinearUpscaling import bilinear_upscale
 from imageProcessing.visualize import visualizeUpscaledImages
 from videoFrameInterpolation import frameInterpolation
+from videoFrameUpscaling import video_upscaling
 
 # #path dei 2 frame
 # framePath1 = "progetto-principi/materials/input/race/frame1-480p.png"
@@ -39,8 +40,21 @@ from videoFrameInterpolation import frameInterpolation
 
 # print("Continuo..")
 
+#Video Upscaling
+input_video_path = "materials/stockVideos/short_480p_10fps.mp4"  # Sostituisci con il percorso del tuo video di input
+output_video_path = "materials/output/VideoProcessing/VideoUpscaling/upscaledVideo.avi"  # Sostituisci con il percorso in cui desideri salvare il video di output
+zoom_factor = 1.5  # fattore di upscaling desiderato
+iterazioniUpscaling = 1 # numero di volte in cui viene eseguito l'upscaling sullo stesso frame
+
+print("Starting Upscaling...")
+video_upscaling(input_video_path, output_video_path, zoom_factor, iterazioniUpscaling)
+
+
 #frame interpolation
-videoPath = "materials/stockVideos/rallye_-_1295(Original).mp4"
-frameInterpolation(videoPath)
+inputVideoPath = "materials/output/VideoProcessing/VideoUpscaling/upscaledVideo.avi"
+outputVideoPath = "materials/output/VideoProcessing/FrameInterpolation/Upscaled-InterpolatedVideo.avi"
+
+print("Starting Frame Interpolation...")
+frameInterpolation(inputVideoPath, outputVideoPath)
 
 print("End of System")
