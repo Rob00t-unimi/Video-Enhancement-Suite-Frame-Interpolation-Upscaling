@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 
-def bilinear_upscale (frame, zoom_factor):
+def bilinear_upscale (frame, zoom_factor, bilateralFilter, sharpening, increaseContrast):
     #frame : frame da upscalare
     #zoom_factor : decimale fattore di upscale dell'immagine
 
@@ -44,15 +44,32 @@ def bilinear_upscale (frame, zoom_factor):
 
 
     upscaledImage = upscale(frame, zoom_factor)
+    
+    # Codice equivalente che utilizza la libreria openCV --> stesso idnetico risultato ma molto più veloce
+    # def cv2Upscale(img, zoom_factor):
+    #     new_width = int(img.shape[1] * zoom_factor)
+    #     new_height = int(img.shape[0] * zoom_factor)
+    #     upscaled_image = cv2.resize(img, (new_width, new_height))
+    #     #upscaled_image = cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_CUBIC)     # --> Bicubico di cv2 è più preciso
+    #     return upscaled_image
+    # upscaledImage = cv2Upscale(frame, zoom_factor)
 
+    outputImage = upscaledImage
 
     if upscaledImage is not None:
 
-        # Applica il filtro bilaterale a upscaledImage
-        bilateral_filtered_image = cv2.bilateralFilter(upscaledImage, d=9, sigmaColor=150, sigmaSpace=150)
+        if bilateralFilter is not None:
+            # Applica il filtro bilaterale a upscaledImage
+            bilateral_filtered_image = cv2.bilateralFilter(upscaledImage, d=bilateralFilter["d"], sigmaColor=bilateralFilter["sigmaColor"], sigmaSpace=bilateralFilter["sigmaSpace"])
+            outputImage = bilateral_filtered_image
 
-        # Applica il miglioramento della nitidezza (sharpening) con il filtro Unsharp Mask 
-        sharpened_image = cv2.addWeighted(upscaledImage, 0.7, bilateral_filtered_image, 0.3, 0)
-        sharpened_image = cv2.convertScaleAbs(sharpened_image, alpha=1.01, beta=0)
+        if sharpening is not None:
+            # Applica il miglioramento della nitidezza (sharpening) con il filtro Unsharp Mask 
+            sharpened_image = cv2.addWeighted(upscaledImage, sharpening["weight_upscaled_image"], outputImage, sharpening["weight_current_image"], 0)
+            outputImage = sharpened_image
+
+        if increaseContrast is not None:
+            contrastedImage = cv2.convertScaleAbs(outputImage, alpha=increaseContrast["alpha"], beta=increaseContrast["beta"])
+            outputImage = contrastedImage
     
-    return sharpened_image
+    return outputImage

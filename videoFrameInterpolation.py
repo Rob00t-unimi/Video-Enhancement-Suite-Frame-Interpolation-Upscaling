@@ -2,7 +2,8 @@ import cv2
 import numpy as np
 import os
 
-def frameInterpolation(input_video_path, output_video_path):
+def frameInterpolation(input_video_path, output_video_path, num_adding_frames):
+    #NumAdiingFrames --> elaborazione di 3 frames tra ogni coppia di frame originali, gli originali vengono scartati
 
     capture = cv2.VideoCapture(input_video_path)
 
@@ -14,9 +15,7 @@ def frameInterpolation(input_video_path, output_video_path):
     originalFps = int(capture.get(cv2.CAP_PROP_FPS))
     frame_count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
     originalSeconds = frame_count / originalFps
-
-    # Calcolo le captures del video dopo l'elaborazione
-    num_adding_frames = 3   # elaborazione di 3 frames tra ogni coppia di frame originali, gli originali vengono scartati
+ 
     tot_finalFrames = num_adding_frames*(frame_count-1)
     finalFps = tot_finalFrames/originalSeconds
 

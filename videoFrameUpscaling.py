@@ -2,7 +2,7 @@ import cv2
 from BilinearUpscaling import bilinear_upscale
 import os
 
-def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIterations):
+def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIterations, bilateralFilter, sharpening, increaseContrast):
 
     # Apri la capture del video
     cap = cv2.VideoCapture(input_video_path)
@@ -44,7 +44,7 @@ def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIte
         tmp = frame
         for _ in range(upscaleIterations):
             # Applica la tua funzione di upscaling al frame
-            upscaled_frame = bilinear_upscale(tmp, zoom_factor)
+            upscaled_frame = bilinear_upscale(tmp, zoom_factor, bilateralFilter, sharpening, increaseContrast)
             tmp = upscaled_frame
 
         # Scrivi il frame elaborato nel video di output
