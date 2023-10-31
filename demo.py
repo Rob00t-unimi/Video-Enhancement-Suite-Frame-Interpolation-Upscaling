@@ -1,6 +1,3 @@
-from imageProcessing.BicubicUpscaling import bicubic_upscale
-from BilinearUpscaling import bilinear_upscale
-from imageProcessing.visualize import visualizeUpscaledImages
 from videoFrameInterpolation import frameInterpolation
 from videoFrameUpscaling import video_upscaling
 import msvcrt
@@ -10,6 +7,8 @@ input_video_path = "materials/stockVideos/short_480p_10fps.mp4"
 output_video_path = "materials/output/VideoProcessing/VideoUpscaling/upscaledVideo.avi"  
 zoom_factor = 1.5  # fattore di upscaling desiderato
 iterazioniUpscaling = 1 # numero di volte in cui viene eseguito l'upscaling sullo stesso frame
+
+#upscaling finale = zoom_factor elevato** iterazioniUpscaling
 
 print("Starting Upscaling...")
 video_upscaling(input_video_path, output_video_path, zoom_factor, iterazioniUpscaling)

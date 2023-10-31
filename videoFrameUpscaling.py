@@ -6,7 +6,14 @@ def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIte
 
     # Apri la capture del video
     cap = cv2.VideoCapture(input_video_path)
+
+    if not cap.isOpened():
+        print("Impossibile aprire il video di input.")
+        return
+    
+    # Estraggo le captures del video originale
     frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    originalFps = int(cap.get(cv2.CAP_PROP_FPS))
 
     # Funzione per stampare la % di export
     def loopState(num):
@@ -14,17 +21,14 @@ def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIte
         print("Video Upscaling: {:.2f}%".format(num / frame_count * 100))
         print("Elaborated frames: ", num , "/", frame_count)
 
-    if not cap.isOpened():
-        print("Impossibile aprire il video di input.")
-        return
-
-    # Legge le dimensioni dei frame del video
-    frame_width = int(cap.get(3))
-    frame_height = int(cap.get(4))
+    # Estraggo dimensioni dei frame e le moltiplico per il fattore di zoom elevato al numero di iterazioni di upscaling
+    dWidth = int(int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))*(zoom_factor**upscaleIterations))
+    dHeight = int(int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))*(zoom_factor**upscaleIterations))
+    frame_size = (dWidth, dHeight)
 
     # Crea un oggetto VideoWriter per scrivere il video di output
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter(output_video_path, fourcc, 20.0, (frame_width, frame_height))
+    out = cv2.VideoWriter(output_video_path, fourcc, originalFps, frame_size, isColor=True)
 
     # Cicla su ogni frame del video
     state = 0
