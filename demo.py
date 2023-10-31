@@ -2,9 +2,9 @@ import numpy as np
 import scipy
 import cv2
 import matplotlib.pyplot as plt
-from BicubicUpscaling import bicubic_upscale
-from BilinearUpscaling import bilinear_upscale
-from visualize import visualizeUpscaledImages
+from imageProcessing.BicubicUpscaling import bicubic_upscale
+from imageProcessing.BilinearUpscaling import bilinear_upscale
+from imageProcessing.visualize import visualizeUpscaledImages
 from videoFrameInterpolation import frameInterpolation
 
 # #path dei 2 frame
