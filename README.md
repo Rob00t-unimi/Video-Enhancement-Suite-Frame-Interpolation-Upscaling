@@ -1,8 +1,8 @@
 # progetto-principi
 
-- set dei path in demo.py
-- set dei filtri e dei parametri in demo.py
-- esecuzione demo.py
+- set dei path in SelectionPage
+- set dei filtri e dei parametri in SelectionPage
+- Set e esecuzione di demo.py
 
 - demo.py richiama prima la funzione di upscaling video che cicla sui frame passandoli come immagini alla funzione di upscaling bilineare
 - una volta eseguito completamente l'upscaling il nuovo video viene salvato
