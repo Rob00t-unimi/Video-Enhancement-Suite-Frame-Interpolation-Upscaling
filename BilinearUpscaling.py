@@ -45,7 +45,7 @@ def bilinear_upscale (frame, zoom_factor, bilateralFilter, sharpening, increaseC
 
     upscaledImage = upscale(frame, zoom_factor)
     
-    # Codice equivalente che utilizza la libreria openCV --> stesso idnetico risultato ma molto più veloce
+    # #Codice equivalente che utilizza la libreria openCV --> stesso idnetico risultato ma molto più veloce
     # def cv2Upscale(img, zoom_factor):
     #     new_width = int(img.shape[1] * zoom_factor)
     #     new_height = int(img.shape[0] * zoom_factor)

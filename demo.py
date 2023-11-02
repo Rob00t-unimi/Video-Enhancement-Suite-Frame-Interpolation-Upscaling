@@ -1,48 +1,46 @@
 from videoFrameInterpolation import frameInterpolation
 from videoFrameUpscaling import video_upscaling
 import msvcrt
+from SelectionPage import SelectFilters, SelectVideo
 
-#Video Upscaling
-input_video_path = "materials/input/stockVideos/waves/short720-25.mp4"  
+
+#Video Path
+input_video_path = SelectVideo("Tunnel") # Valori accettati: Tunnel, Waves, Rallye, Smoke, Monochrome, Lights, Bees
 output_video_path = "materials/output/VideoProcessing/VideoUpscaling/upscaledVideo.avi"  
 zoom_factor = 1.5  # fattore di upscaling desiderato
 iterazioniUpscaling = 2 # numero di volte in cui viene eseguito l'upscaling sullo stesso frame
 
 #upscaling finale = zoom_factor elevato** iterazioniUpscaling
 
-# # Filtri applicati durante l'upscaling (se filtro = None non viene applicato)
+# Filtri applicati durante l'upscaling (se filtro = None non viene applicato)
 
-# # standard values:
+bilateralFilter, sharpening, increaseContrast = SelectFilters("Tunnel")     #Valori accettati: Tunnel, Waves, Rallye, None, Default
+
+
+
+# # Se si vuole impostare un path manualmente: 
+# input_video_path = SelectVideo("materials/input/stockVideos/", "")
+
+# # Configurazione filtri manuale: 
 # bilateralFilter = {
-#     "d": 9,
-#     "sigmaColor": 75,
-#     "sigmaSpace": 75
+#     "d": ,
+#     "sigmaColor": ,
+#     "sigmaSpace": 
 # }
 # sharpening = {
-#     "weight_upscaled_image": 1.5,
-#     "weight_current_image": -0.5
-# }
-# increaseContrast = None
-
-# # rallye:
-# bilateralFilter = {
-#     "d": 9,
-#     "sigmaColor": 150,
-#     "sigmaSpace": 150
-# }
-# sharpening = {
-#     "weight_upscaled_image": 0.7,
-#     "weight_current_image": 0.3
+#     "weight_upscaled_image": ,
+#     "weight_current_image": 
 # }
 # increaseContrast = {
-#     "alpha": 1.01,
-#     "beta": 0
+#     "alpha": ,
+#     "beta": 
 # }
 
-# All filters disalbed:
-bilateralFilter = None
-sharpening = None
-increaseContrast = None
+# # Disabilitare manualmente alcuni filtri:
+# bilateralFilter = None
+# sharpening = None
+# increaseContrast = None
+
 
 print("Starting Upscaling...")
 video_upscaling(input_video_path, output_video_path, zoom_factor, iterazioniUpscaling, bilateralFilter, sharpening, increaseContrast)
