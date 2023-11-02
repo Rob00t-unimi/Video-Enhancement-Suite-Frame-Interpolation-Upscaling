@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 def frameInterpolation(input_video_path, output_video_path, num_adding_frames):
-    #NumAdiingFrames --> elaborazione di 3 frames tra ogni coppia di frame originali, gli originali vengono scartati
+    #NumAdiingFrames --> elaborazione di n frames tra ogni coppia di frame originali, gli originali vengono scartati
 
     capture = cv2.VideoCapture(input_video_path)
 

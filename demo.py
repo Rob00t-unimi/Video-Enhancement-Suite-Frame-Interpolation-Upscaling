@@ -13,13 +13,12 @@ iterazioniUpscaling = 2 # numero di volte in cui viene eseguito l'upscaling sull
 #upscaling finale = zoom_factor elevato** iterazioniUpscaling
 
 # Filtri applicati durante l'upscaling (se filtro = None non viene applicato)
-
 bilateralFilter, sharpening, increaseContrast = SelectFilters("Tunnel")     #Valori accettati: Tunnel, Waves, Rallye, None, Default
 
 
 
 # # Se si vuole impostare un path manualmente: 
-# input_video_path = SelectVideo("materials/input/stockVideos/", "")
+# input_video_path = SelectVideo("materials/input/stockVideos/" + "")
 
 # # Configurazione filtri manuale: 
 # bilateralFilter = {
