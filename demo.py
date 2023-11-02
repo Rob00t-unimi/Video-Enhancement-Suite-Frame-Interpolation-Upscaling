@@ -18,7 +18,7 @@ bilateralFilter, sharpening, increaseContrast = SelectFilters("Tunnel")     #Val
 
 
 # # Se si vuole impostare un path manualmente: 
-# input_video_path = SelectVideo("materials/input/stockVideos/" + "")
+#input_video_path = "materials/input/stockVideos/lights/short-720p-10fps.mp4"
 
 # # Configurazione filtri manuale: 
 # bilateralFilter = {

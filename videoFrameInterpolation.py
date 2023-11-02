@@ -12,8 +12,8 @@ def frameInterpolation(input_video_path, output_video_path, num_adding_frames):
         return
     
     # Estraggo le captures del video originale
-    originalFps = int(capture.get(cv2.CAP_PROP_FPS))
-    frame_count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
+    originalFps = float(capture.get(cv2.CAP_PROP_FPS))
+    frame_count = float(capture.get(cv2.CAP_PROP_FRAME_COUNT))
     originalSeconds = frame_count / originalFps
  
     tot_finalFrames = num_adding_frames*(frame_count-1)
