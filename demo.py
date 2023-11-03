@@ -3,25 +3,25 @@ from videoFrameUpscaling import video_upscaling
 import msvcrt
 from SelectionPage import SelectFilters, SelectVideo
 
+# Per una questione computazionale inverto le operazioni, prima interpolo il frame rate e poi faccio upscaling
+
 
 #Video Path
 input_video_path = SelectVideo("Lights10") # Valori accettati: Tunnel, Waves, Rallye, Smoke, Monochrome, Lights, Bees, Lights10
-output_video_path = "materials/output/VideoProcessing/VideoUpscaling/upscaledVideo.avi"  
+outputPath1 = "materials/output/VideoProcessing/FrameInterpolation/InterpolatedVideo.avi"  
+outputPath2 = "materials/output/VideoProcessing/VideoUpscaling/InterpolatedVideo-Upscaled.avi"
+
+# # Se si vuole impostare un path manualmente: 
+#input_video_path = "materials/input/stockVideos/"
 
 #Parametri
 zoom_factor = 1.5  # fattore di upscaling desiderato
 iterazioniUpscaling = 1 # numero di volte in cui viene eseguito l'upscaling sullo stesso frame
 numInterpolateFrames = 10 #numero di frame da interpolare per ogni coppia di frame
-
 #upscaling finale = zoom_factor elevato** iterazioniUpscaling
 
 # Filtri applicati durante l'upscaling (se filtro = None non viene applicato)
 filtersValues, increaseContrast = SelectFilters("Lights10")     #Valori accettati:  Bees, Bees360p, Lights10, None
-
-
-
-# # Se si vuole impostare un path manualmente: 
-#input_video_path = "materials/input/stockVideos/lights/short-720p-10fps.mp4"
 
 # # Configurazione filtri manuale: 
 # filtersValues = {
@@ -38,14 +38,15 @@ filtersValues, increaseContrast = SelectFilters("Lights10")     #Valori accettat
 #     "beta": 
 # }
 
-# # Disabilitare manualmente alcuni filtri:
+# # se si vuole disabilitare manualmente i filtri:
 # filtersValues = None
 # increaseContrast = None
 
 
-print("Starting Upscaling...")
-video_upscaling(input_video_path, output_video_path, zoom_factor, iterazioniUpscaling, filtersValues, increaseContrast)
-print("New Video There: materials/output/VideoProcessing/VideoUpscaling/upscaledVideo.avi")
+#frame interpolation
+print("Starting Frame Interpolation...")
+frameInterpolation(input_video_path, outputPath1, numInterpolateFrames)     #fps finali = numInterpolateFrames * (numFramesIniziale - 1)
+print("Final Video There:" + outputPath1)
 print("Press Enter to continue...")
 
 # Attendi fino a quando viene premuto "Enter"
@@ -55,14 +56,8 @@ while True:
         if key == b'\r':
             break
 
-#frame interpolation
-inputVideoPath = "materials/output/VideoProcessing/VideoUpscaling/upscaledVideo.avi"
-outputVideoPath = "materials/output/VideoProcessing/FrameInterpolation/Upscaled-InterpolatedVideo.avi"
-
-#fps finali = numInterpolateFrames * (numFramesIniziale - 1)
-
-print("Starting Frame Interpolation...")
-frameInterpolation(inputVideoPath, outputVideoPath, numInterpolateFrames)
-print("Final Video There: materials/output/VideoProcessing/VideoUpscaling/upscaledVideo.avi")
-
+#Upscaling
+print("Starting Upscaling...")
+video_upscaling(outputPath1, outputPath2, zoom_factor, iterazioniUpscaling, filtersValues, increaseContrast)
+print("New Video There:" + outputPath2)
 print("End of System")
