@@ -2,6 +2,13 @@
 
 For computational complexity reasons, I have inverted the operations, first I interpolate the frame rate and then I upscale.
 
+### Requires:
+## Used Libraries:
+- OpenCV
+- NumPy
+- msvcrt
+- os
+
 ### Instructions:
 
 - Set a known path in `demo.py`, or set it manually.
