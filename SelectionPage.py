@@ -23,13 +23,7 @@ def SelectVideo(input_string):
         
 
 
-
-
-
 # # Filtri applicati durante l'upscaling (se filtro = None non viene applicato)
-    # bilateral --> fa smoothing preservando più dettagli possibile, quindi ridure il rumore
-    # sharpening --> fa il miglioramento della nitidezza enfatizzando i bordi
-    # increaseContrast --> aumenta il miglioramento della nitidezza
     # EDSR darebbe un miglior risultato nel miglioramento dell'immagine ma necessita di rete neurale preaddestrata e noi volevamo invece soffermarci su un sistema di algoritmi
 
 def SelectFilters(input_string):
@@ -51,10 +45,6 @@ def SelectFilters(input_string):
                 "blur_sigma_x_2": 1,        #sigma blurring finale
                 "showEdges": False          #tenere a false
             }
-            # increaseContrast = {
-            #     "alpha": 1.05,
-            #     "beta": 1
-            # }
 
         case "Bees360p":
             filtersValues = {
@@ -79,7 +69,6 @@ def SelectFilters(input_string):
                 "blur_sigma_x_2": 0.5,      #sigma blurring finale
                 "showEdges": False
             }
-
 
     return filtersValues, increaseContrast
 
