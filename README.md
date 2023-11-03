@@ -3,7 +3,7 @@
 For computational complexity reasons, I have inverted the operations, first I interpolate the frame rate and then I upscale.
 
 ### Requires:
-## Used Libraries:
+#### Used Libraries:
 - OpenCV
 - NumPy
 - msvcrt
