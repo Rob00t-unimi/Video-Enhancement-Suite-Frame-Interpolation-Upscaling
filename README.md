@@ -27,29 +27,29 @@ For computational complexity reasons, I have inverted the operations, first I in
 
 ### Legend:
 
-- `zoom_factor` = 1.5  # Desired upscaling factor
-- `iterazioniUpscaling` = 1  # Number of times upscaling is performed on the same frame
-- `numInterpolateFrames` = 10  # Number of frames to interpolate for each frame pair
+- `zoom_factor`:                        Desired upscaling factor
+- `iterazioniUpscaling`:                Number of times upscaling is performed on the same frame
+- `numInterpolateFrames`:               Number of frames to interpolate for each frame pair
+
 - Final upscaling = zoom_factor ** iterazioniUpscaling
 
-- `SelectVideo` accepted strings: Tunnel, Waves, Rallye, Smoke, Monochrome, Lights, Bees, Lights10
-- `SelectFilters` accepted strings: Bees, Bees360p, Lights10, None
+- `SelectVideo` accepted strings:       Tunnel, Waves, Rallye, Smoke, Monochrome, Lights, Bees, Lights10
+- `SelectFilters` accepted strings:     Bees, Bees360p, Lights10, None
 
-- Final FPS after interpolation: #final FPS = numInterpolateFrames * (numFramesIniziale - 1)
+- Final FPS after interpolation:  FPS = numInterpolateFrames * (numFramesIniziale - 1)
 
-- Codec used: xvid
+- Codec used: XVID
 
 - `filterValues` Legend:
-    filtersValues = {
-        "blur_k_dim": ,            # Initial blurring kernel size
-        "blur_sigma_x": ,          # Initial blurring sigma
-        "sharp_k_center": ,        # Center value of the sharpening kernel
-        "Laplacian_k_size": ,      # Laplacian kernel size (lower values detect finer edges)
-        "threshold_value": ,       # Threshold value (precision of edges included in binarization, 0-255, lower values include more edges)
-        "blur_k_dim_2": ,          # Final blurring kernel size
-        "blur_sigma_x_2": ,        # Final blurring sigma
-        "showEdges": False         # Keep as false, allows enabling or disabling the visualization of edge detection overlaid on the image
-    }
+
+    "blur_k_dim":                       Initial blurring kernel size
+    "blur_sigma_x":                     Initial blurring sigma
+    "sharp_k_center":                   Center value of the sharpening kernel
+    "Laplacian_k_size":                 Laplacian kernel size (lower values detect finer edges)
+    "threshold_value":                  Threshold value (precision of edges included in binarization, 0-255, lower values include more edges)
+    "blur_k_dim_2":                     Final blurring kernel size
+    "blur_sigma_x_2":                   Final blurring sigma
+    "showEdges":                        Keep as false, allows enabling or disabling the visualization of edge detection overlaid on the image
 
 Coded by Roberto Tallarini
 
