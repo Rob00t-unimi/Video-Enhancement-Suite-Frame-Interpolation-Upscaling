@@ -42,15 +42,15 @@ For computational complexity reasons, I have inverted the operations, first I in
 
 - `filterValues` Legend:
 
-    -- `blur_k_dim`:                       Initial blurring kernel size
-    -- `blur_sigma_x`:                     Initial blurring sigma
-    -- `sharp_k_center`:                   Center value of the sharpening kernel
-    -- `Laplacian_k_size`:                 Laplacian kernel size (lower values detect finer edges)
-    -- `threshold_value`:                  Threshold value (precision of edges included in binarization, 0-255, lower values include more edges)
-    -- `blur_k_dim_2`:                     Final blurring kernel size
-    -- `blur_sigma_x_2`:                   Final blurring sigma
-    -- `showEdges`:                        Keep as false, allows enabling or disabling the visualization of edge detection overlaid on the image
-    
+    * `blur_k_dim`:                       Initial blurring kernel size
+    * `blur_sigma_x`:                     Initial blurring sigma
+    * `sharp_k_center`:                   Center value of the sharpening kernel
+    * `Laplacian_k_size`:                 Laplacian kernel size (lower values detect finer edges)
+    * `threshold_value`:                  Threshold value (precision of edges included in binarization, 0-255, lower values include more edges)
+    * `blur_k_dim_2`:                     Final blurring kernel size
+    * `blur_sigma_x_2`:                   Final blurring sigma
+    * `showEdges`:                        Keep as false, allows enabling or disabling the visualization of edge detection overlaid on the image
+
 
 Coded by Roberto Tallarini
 
