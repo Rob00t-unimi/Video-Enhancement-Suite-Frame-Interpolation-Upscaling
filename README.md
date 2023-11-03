@@ -11,17 +11,17 @@ For computational complexity reasons, I have inverted the operations, first I in
 ### Processing Steps:
 
 #### Frame Interpolation:
-- `demo.py` passes the video's path to the frame interpolation function.
-- The video interpolation function increases the number of frames by first calculating the optical flow between frame pairs both forward and backward, then interpolating n new frames between each frame pair.
-- The original frames are discarded.
-- The video is saved.
+1. `demo.py` passes the video's path to the frame interpolation function.
+2. The video interpolation function increases the number of frames by first calculating the optical flow between frame pairs both forward and backward, then interpolating n new frames between each frame pair.
+3. The original frames are discarded.
+4. The video is saved.
 
 #### Next Step:
-- Press Enter to continue.
+5. Press Enter to continue.
 
 #### Video Upscaling:
-- `demo.py` calls the video upscaling function, passing it the path of the interpolated video. For each frame, the function invokes the bilinear upscaling function.
-- Once a frame has been upscaled, filters are applied, and the frame is saved to the new video, until completion.
+6. `demo.py` calls the video upscaling function, passing it the path of the interpolated video. For each frame, the function invokes the bilinear upscaling function.
+7. Once a frame has been upscaled, filters are applied, and the frame is saved to the new video, until completion.
 
 ### End of System
 
