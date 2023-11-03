@@ -5,15 +5,18 @@ from SelectionPage import SelectFilters, SelectVideo
 
 
 #Video Path
-input_video_path = SelectVideo("Tunnel") # Valori accettati: Tunnel, Waves, Rallye, Smoke, Monochrome, Lights, Bees
+input_video_path = SelectVideo("Lights10") # Valori accettati: Tunnel, Waves, Rallye, Smoke, Monochrome, Lights, Bees, Lights10
 output_video_path = "materials/output/VideoProcessing/VideoUpscaling/upscaledVideo.avi"  
+
+#Parametri
 zoom_factor = 1.5  # fattore di upscaling desiderato
-iterazioniUpscaling = 2 # numero di volte in cui viene eseguito l'upscaling sullo stesso frame
+iterazioniUpscaling = 1 # numero di volte in cui viene eseguito l'upscaling sullo stesso frame
+numInterpolateFrames = 10 #numero di frame da interpolare per ogni coppia di frame
 
 #upscaling finale = zoom_factor elevato** iterazioniUpscaling
 
 # Filtri applicati durante l'upscaling (se filtro = None non viene applicato)
-bilateralFilter, sharpening, increaseContrast = SelectFilters("Tunnel")     #Valori accettati: Tunnel, Waves, Rallye, None, Default
+filtersValues, increaseContrast = SelectFilters("Lights10")     #Valori accettati:  Bees, Bees360p, Lights10, None
 
 
 
@@ -21,28 +24,27 @@ bilateralFilter, sharpening, increaseContrast = SelectFilters("Tunnel")     #Val
 #input_video_path = "materials/input/stockVideos/lights/short-720p-10fps.mp4"
 
 # # Configurazione filtri manuale: 
-# bilateralFilter = {
-#     "d": ,
-#     "sigmaColor": ,
-#     "sigmaSpace": 
-# }
-# sharpening = {
-#     "weight_upscaled_image": ,
-#     "weight_current_image": 
-# }
+# filtersValues = {
+#                 "blur_k_dim": 5,
+#                 "blur_sigma_x": 1,
+#                 "sharp_k_center": 7,
+#                 "Laplacian_k_size": 3,
+#                 "threshold_value": 9,
+#                 "blur_k_dim_2": 5,
+#                 "blur_sigma_x_2": 1
+#             }
 # increaseContrast = {
 #     "alpha": ,
 #     "beta": 
 # }
 
 # # Disabilitare manualmente alcuni filtri:
-# bilateralFilter = None
-# sharpening = None
+# filtersValues = None
 # increaseContrast = None
 
 
 print("Starting Upscaling...")
-video_upscaling(input_video_path, output_video_path, zoom_factor, iterazioniUpscaling, bilateralFilter, sharpening, increaseContrast)
+video_upscaling(input_video_path, output_video_path, zoom_factor, iterazioniUpscaling, filtersValues, increaseContrast)
 print("New Video There: materials/output/VideoProcessing/VideoUpscaling/upscaledVideo.avi")
 print("Press Enter to continue...")
 
@@ -56,7 +58,6 @@ while True:
 #frame interpolation
 inputVideoPath = "materials/output/VideoProcessing/VideoUpscaling/upscaledVideo.avi"
 outputVideoPath = "materials/output/VideoProcessing/FrameInterpolation/Upscaled-InterpolatedVideo.avi"
-numInterpolateFrames = 3 #numero di frame da interpolare per ogni coppia di frame
 
 #fps finali = numInterpolateFrames * (numFramesIniziale - 1)
 
