@@ -9,12 +9,18 @@ For computational complexity reasons, I have inverted the operations, first I in
 - matplotlib
 - msvcrt
 - os
+- tkinter
+- time
+- json
+- ttkbootstrap
+- ttkthemes
 
 ### Instructions:
 
-- Set a known path in `demo.py`, or set it manually.
-- Set the known filters and their parameters in `demo.py`, or set them manually.
-- Run `demo.py`.
+- Run GUI.py
+- Select the video
+- Select parameters
+- Run
 
 ### Processing Steps:
 
@@ -24,12 +30,9 @@ For computational complexity reasons, I have inverted the operations, first I in
 3. The original frames are discarded.
 4. The video is saved.
 
-#### Next Step:
-5. Press Enter to continue.
-
 #### Video Upscaling:
-6. `demo.py` calls the video upscaling function, passing it the path of the interpolated video. For each frame, the function invokes the bilinear upscaling function.
-7. Once a frame has been upscaled, filters are applied, and the frame is saved to the new video, until completion.
+5. `demo.py` calls the video upscaling function, passing it the path of the interpolated video. For each frame, the function invokes the bilinear upscaling function.
+6. Once a frame has been upscaled, filters are applied, and the frame is saved to the new video, until completion.
 
 ### End of System
 
@@ -39,7 +42,7 @@ For computational complexity reasons, I have inverted the operations, first I in
 - `iterazioniUpscaling`:                Number of times upscaling is performed on the same frame
 - `numInterpolateFrames`:               Number of frames to interpolate for each frame pair
 
-- Final upscaling = zoom_factor ** iterazioniUpscaling
+- final_upscaling = initial_resolution * (zoom_factor ** iterations)
 
 - `SelectVideo` accepted strings:       Tunnel, Waves, Rallye, Smoke, Monochrome, Lights, Bees, Lights10
 - `SelectFilters` accepted strings:     Bees, Bees360p, Lights10, None

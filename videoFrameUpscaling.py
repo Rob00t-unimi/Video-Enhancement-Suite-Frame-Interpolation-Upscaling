@@ -3,7 +3,7 @@ from BilinearUpscaling import bilinear_upscale
 import os
 import numpy as np
 
-def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIterations, filtersValues, increaseContrast):
+def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIterations, filtersValues, increaseContrast, updateProgress2):
 
     # Apri la capture del video
     cap = cv2.VideoCapture(input_video_path)
@@ -21,6 +21,7 @@ def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIte
         os.system('cls' if os.name == 'nt' else 'clear')
         print("Video Upscaling: {:.2f}%".format(num / frame_count * 100))
         print("Elaborated frames: ", num , "/", frame_count)
+        updateProgress2(num, frame_count)
 
     # Estraggo dimensioni dei frame e le moltiplico per il fattore di zoom elevato al numero di iterazioni di upscaling
     dWidth = int(int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))*(zoom_factor**upscaleIterations))
