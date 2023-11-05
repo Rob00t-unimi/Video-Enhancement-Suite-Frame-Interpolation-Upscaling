@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 
-def bilinear_upscale (frame, zoom_factor, bilateralFilter, sharpening, increaseContrast):
+def bilinear_upscale (frame, zoom_factor):
     #frame : frame da upscalare
     #zoom_factor : decimale fattore di upscale dell'immagine
 
@@ -52,24 +52,7 @@ def bilinear_upscale (frame, zoom_factor, bilateralFilter, sharpening, increaseC
     #     upscaled_image = cv2.resize(img, (new_width, new_height))
     #     #upscaled_image = cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_CUBIC)     # --> Bicubico di cv2 è più preciso
     #     return upscaled_image
+    
     # upscaledImage = cv2Upscale(frame, zoom_factor)
 
-    outputImage = upscaledImage
-
-    if upscaledImage is not None:
-
-        if bilateralFilter is not None:
-            # Applica il filtro bilaterale a upscaledImage
-            bilateral_filtered_image = cv2.bilateralFilter(upscaledImage, d=bilateralFilter["d"], sigmaColor=bilateralFilter["sigmaColor"], sigmaSpace=bilateralFilter["sigmaSpace"])
-            outputImage = bilateral_filtered_image
-
-        if sharpening is not None:
-            # Applica il miglioramento della nitidezza (sharpening) con il filtro Unsharp Mask 
-            sharpened_image = cv2.addWeighted(upscaledImage, sharpening["weight_upscaled_image"], outputImage, sharpening["weight_current_image"], 0)
-            outputImage = sharpened_image
-
-        if increaseContrast is not None:
-            contrastedImage = cv2.convertScaleAbs(outputImage, alpha=increaseContrast["alpha"], beta=increaseContrast["beta"])
-            outputImage = contrastedImage
-    
-    return outputImage
+    return upscaledImage
