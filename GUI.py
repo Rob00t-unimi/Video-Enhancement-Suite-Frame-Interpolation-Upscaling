@@ -7,6 +7,8 @@ import cv2
 from demo import start
 import time
 from tkinter import ttk
+import webbrowser
+
 
 ############################################################################################    Variabili Globali
 
@@ -24,6 +26,7 @@ selectedfilter = {
     "blur_sigma_x_2": 0.5,
     "showEdges": False
 }
+interpolationFirst = True
 
 # Carica i dati dal file JSON
 with open('filtriPredefiniti.json', 'r') as json_file:
@@ -35,8 +38,8 @@ filters = data
 
 # Funzione per controllare le variabili e stamparle quando cambiano
 def monitor_variables():
-    global selected_video, iterations, numFrameInterpol, zoom_factor, selectedfilter
-    pre_selected_video, pre_iterations, pre_numFrameInterpol, pre_zoom_factor, pre_selectedfilter = selected_video, iterations, numFrameInterpol, zoom_factor, selectedfilter
+    global selected_video, iterations, numFrameInterpol, zoom_factor, selectedfilter, interpolationFirst
+    pre_selected_video, pre_iterations, pre_numFrameInterpol, pre_zoom_factor, pre_selectedfilter, pre_interpolationFirst = selected_video, iterations, numFrameInterpol, zoom_factor, selectedfilter, interpolationFirst
     while True:
         # Controlla se le variabili sono cambiate
         if selected_video != pre_selected_video:
@@ -47,11 +50,13 @@ def monitor_variables():
             print(f"numFrameInterpol: {numFrameInterpol}")
         if zoom_factor != pre_zoom_factor:
             print(f"zoom_factor: {zoom_factor}")
+        if interpolationFirst != pre_interpolationFirst:
+            print(f"interpolationFirst: {interpolationFirst}")
         if selectedfilter != pre_selectedfilter:
             print("selectedfilter:")
             for key, value in selectedfilter.items():
                 print(f"  {key}: {value}")
-        pre_selected_video, pre_iterations, pre_numFrameInterpol, pre_zoom_factor, pre_selectedfilter = selected_video, iterations, numFrameInterpol, zoom_factor, selectedfilter
+        pre_selected_video, pre_iterations, pre_numFrameInterpol, pre_zoom_factor, pre_selectedfilter, pre_interpolationFirst = selected_video, iterations, numFrameInterpol, zoom_factor, selectedfilter, interpolationFirst
         # Aggiorna il controllo ogni tot secondi (ad esempio, ogni 1 secondo)
         time.sleep(0.5)
 
@@ -64,7 +69,7 @@ monitor_thread.start()
 ############################################################################################    Funzioni principali
 
 def confirm():
-    global selected_video, iterations, numFrameInterpol, zoom_factor, selectedfilter
+    global selected_video, iterations, numFrameInterpol, zoom_factor, selectedfilter, interpolationFirst
     global demo_window
 
     elaborated1 = 0
@@ -81,7 +86,7 @@ def confirm():
     demo_window = tk.Toplevel(root)
     demo_window.title("Esecuzione Demo")
 
-    frame_label1 = tk.Label(demo_window, text="Interpolazione di frame")
+    frame_label1 = tk.Label(demo_window, text="Interpolazione di frame", font=("Arial", 12))
     frame_label1.grid(row=0, column=0, padx=10, pady=5)
 
     # Creazione di una barra di avanzamento determinata per la prima percentuale
@@ -91,7 +96,7 @@ def confirm():
     current_label1 = tk.Label(demo_window, text="", padx=10)
     current_label1.grid(row=2, column=0)
 
-    frame_label2 = tk.Label(demo_window, text="Upscaling")
+    frame_label2 = tk.Label(demo_window, text="Upscaling", font=("Arial", 12))
     frame_label2.grid(row=3, column=0, padx=10, pady=5)
 
     # Creazione di una barra di avanzamento determinata per la seconda percentuale
@@ -124,22 +129,21 @@ def confirm():
 
     # Completamento progress bar
     def on_progress1_completion():
-        time.sleep(1)
         progress1.grid_forget()
-        frame_label1.config(text="Interpolazione di frame completata")
-        progress2.start()
+        frame_label1.config(text="Interpolazione di frame completata", font=("Arial", 12))
+        if interpolationFirst: 
+            progress2.start()
+
 
     def on_progress2_completion():
-        time.sleep(1)
         progress2.grid_forget()
-        frame_label2.config(text="Upscaling completato")
-        time.sleep(2)
-        progress1.stop()
-        progress2.stop()
+        frame_label2.config(text="Upscaling completato", font=("Arial", 12))
+        if interpolationFirst is not True: 
+            progress1.start()
 
     def start_processing():
         try:
-            start(selected_video, iterations, numFrameInterpol, zoom_factor, selectedfilter, updateProgress1, updateProgress2)
+            start(selected_video, iterations, numFrameInterpol, zoom_factor, selectedfilter, updateProgress1, updateProgress2, interpolationFirst)
             print("Elaborazione completata. Il video è stato salvato.")
             time.sleep(3)
             demo_window.destroy()
@@ -153,7 +157,11 @@ def confirm():
     processing_thread.daemon = True
     processing_thread.start()
 
-    progress1.start()    
+    if interpolationFirst: 
+        progress1.start()
+    else:
+        progress2.start()
+        
 
 ###########################################################################################     Funzioni Elementi Grafici
 
@@ -258,6 +266,14 @@ def update_input_value(key, value):
     tmp[key] = value
     selectedfilter = tmp.copy()
 
+def change_order(value):
+    global interpolationFirst
+    interpolationFirst = value
+
+
+def show_documentation():
+    webbrowser.open("documentation.html")
+
 ############################################################################################    Stile
 # Carica gli stili dal file JSON
 with open('style.json', 'r') as styles_file:
@@ -275,11 +291,11 @@ root.geometry("1500x1100")  # Imposta la larghezza a 720 pixel e l'altezza a 108
 style = ThemedStyle(root)
 style = Style(theme="superhero")
 
-############################################################################################    Grafica
-
 main_frame = tk.Frame(root)
 apply_css_style(main_frame, "main-div")
 main_frame.pack(fill="both", expand=True)
+
+############################################################################################    Grafica
 
 # Calculate heights based on percentages of the total window height
 total_height = root.winfo_screenheight()  # Get the screen height
@@ -306,8 +322,10 @@ video_selector_frame = tk.Frame(container_frame)
 apply_css_style(video_selector_frame, "video-selector-div")
 video_selector_frame.pack(side="left", fill="both", expand=True)
 
-spacer_frame = tk.Frame(video_selector_frame)
-spacer_frame.pack(side="top", fill="both", expand=True)
+Order_bool = tk.BooleanVar()
+Order_bool.set(interpolationFirst)
+Order_bool_btn = tk.Checkbutton(video_selector_frame, text="Interpolation First", variable=Order_bool, command=lambda: change_order(Order_bool.get()), font=("Arial", 15))
+Order_bool_btn.pack(side="top", fill="both", expand=True)
 
 select_video_button = tk.Button(video_selector_frame, text="Seleziona Video", font=("Arial", 18), command=select_video)
 select_video_button.pack()
@@ -431,6 +449,33 @@ start_button_frame = tk.Frame(main_frame, height=start_button_height)
 apply_css_style(start_button_frame, "start-button-div")
 start_button_frame.pack(fill="x")
 start_button = tk.Button(start_button_frame, text="Conferma e Inizia", command=confirm, font=("Arial", 18))
-start_button.pack()
+start_button.grid(row=0, column=1, padx=10, pady=10)
+start_button_frame.columnconfigure(2, weight=1)
+
+show_doc_button = tk.Button(start_button_frame, text="Info", command=show_documentation, font=("Arial", 14))
+show_doc_button.grid(row=0, column=3, padx=0, pady=10)
+
+label1 = tk.Label(start_button_frame)
+label1.grid(row=0, column=0, padx=10, pady=10)
+start_button_frame.columnconfigure(0, weight=2)
+
+label3 = tk.Label(start_button_frame)
+label1.grid(row=0, column=0, padx=10, pady=10)
+start_button_frame.columnconfigure(2, weight=2)
+
+# Update the style in style.json
+with open('style.json', 'r') as styles_file:
+    css_styles = json.load(styles_file)
+
+css_styles['show-doc-button-style'] = {
+    "background": "lightgray",  # Change to the desired background color
+    "font": "Arial 15",
+    "foreground": "blue"  # Text color
+}
+
+# Apply the updated style to the button
+show_doc_button_style = "show-doc-button-style"  # Use the updated style name
+apply_css_style(show_doc_button, show_doc_button_style)
+
 
 root.mainloop()

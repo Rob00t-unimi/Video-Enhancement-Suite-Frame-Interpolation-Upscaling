@@ -14,6 +14,7 @@ For computational complexity reasons, I have inverted the operations, first I in
 - json
 - ttkbootstrap
 - ttkthemes
+- webbrowser
 
 ### Instructions:
 
