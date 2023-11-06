@@ -9,6 +9,8 @@ import time
 from tkinter import ttk
 import webbrowser
 import locale
+import os
+import platform
 
 
 ############################################################################################    Variabili Globali
@@ -30,10 +32,20 @@ selectedfilter = {
 interpolationFirst = True
 
 # Carica i dati dal file JSON
-with open('filtriPredefiniti.json', 'r') as json_file:
+with open('JSON/filtriPredefiniti.json', 'r') as json_file:
     data = json.load(json_file)
 
 filters = data
+
+current_file_path = os.path.abspath(__file__)
+directory_path = os.path.dirname(current_file_path)
+
+with open('JSON/outputPath.json', 'r') as json_file:
+    data = json.load(json_file)
+    outputPath1 = directory_path + "/" + data["outputpath1"]
+    outputPath2 = directory_path + "/" + data["outputPath2"]
+    outputPath3 = directory_path + "/" + data["outputPath3"]
+    outputPath4 = directory_path + "/" + data["outputPath4"]
 
 ############################################################################################    Controllo Multithread
 
@@ -91,7 +103,7 @@ def confirm():
     frame_label1.grid(row=0, column=0, padx=10, pady=5)
 
     # Creazione di una barra di avanzamento determinata per la prima percentuale
-    progress1 = ttk.Progressbar(demo_window, length=200, mode="determinate")
+    progress1 = ttk.Progressbar(demo_window, length=300, mode="determinate")
     progress1.grid(row=1, column=0, padx=10, pady=5)
 
     current_label1 = tk.Label(demo_window, text="", padx=10)
@@ -101,7 +113,7 @@ def confirm():
     frame_label2.grid(row=3, column=0, padx=10, pady=5)
 
     # Creazione di una barra di avanzamento determinata per la seconda percentuale
-    progress2 = ttk.Progressbar(demo_window, length=200, mode="determinate")
+    progress2 = ttk.Progressbar(demo_window, length=300, mode="determinate")
     progress2.grid(row=4, column=0, padx=10, pady=5)
 
     current_label2 = tk.Label(demo_window, text="", padx=10)
@@ -134,13 +146,28 @@ def confirm():
         frame_label1.config(text="Interpolazione di frame completata", font=("Arial", 12))
         if interpolationFirst: 
             progress2.start()
+            if platform.system() == "Windows":
+                global outputPath1
+                os.startfile(outputPath1)
+        else:
+            if platform.system() == "Windows":
+                global outputPath4
+                os.startfile(outputPath4)
 
 
     def on_progress2_completion():
         progress2.grid_forget()
         frame_label2.config(text="Upscaling completato", font=("Arial", 12))
-        if interpolationFirst is not True: 
+        if interpolationFirst: 
+            if platform.system() == "Windows":
+                global outputPath2
+                os.startfile(outputPath2)
+        else:
             progress1.start()
+            if platform.system() == "Windows":
+                global outputPath3
+                os.startfile(outputPath3)
+
 
     def start_processing():
         try:
@@ -150,9 +177,14 @@ def confirm():
             demo_window.destroy()
         except Exception as e:
             print(f"Errore durante l'elaborazione del video: {str(e)}")
-            time.sleep(3)
-            progress1.stop()  # Ferma la barra di avanzamento in caso di errore
-            progress2.stop()
+            time.sleep(1)
+            try:
+                progress1.stop()
+                progress2.stop()
+                print(f"Progress bars chiuse.: {e}")
+            except Exception as e:
+                print(f"Progress bars già chiuse.: {e}")
+
 
     processing_thread = threading.Thread(target=start_processing)
     processing_thread.daemon = True
@@ -162,7 +194,14 @@ def confirm():
         progress1.start()
     else:
         progress2.start()
-        
+            
+    # def on_closing():
+    #     if processing_thread.is_alive():
+    #         processing_thread.join()  
+    #         print("Thread interrotto.")
+    #     demo_window.destroy()
+
+    # demo_window.protocol("WM_DELETE_WINDOW", on_closing)
 
 ###########################################################################################     Funzioni Elementi Grafici
 
@@ -274,11 +313,11 @@ def change_order(value):
 
 
 def show_documentation():
-    webbrowser.open("documentation.html")
+    webbrowser.open("documentation\documentation.html")
 
 ############################################################################################    Stile
 # Carica gli stili dal file JSON
-with open('style.json', 'r') as styles_file:
+with open('JSON/style.json', 'r') as styles_file:
     css_styles = json.load(styles_file)
 
 def apply_css_style(widget, style):
@@ -493,7 +532,7 @@ label1.grid(row=0, column=0, padx=10, pady=10)
 start_button_frame.columnconfigure(2, weight=2)
 
 # Update the style in style.json
-with open('style.json', 'r') as styles_file:
+with open('JSON/style.json', 'r') as styles_file:
     css_styles = json.load(styles_file)
 
 css_styles['show-doc-button-style'] = {
@@ -508,3 +547,7 @@ apply_css_style(show_doc_button, show_doc_button_style)
 
 
 root.mainloop()
+
+
+#modificare
+#interrompere il thread di processing quando si chiude la finestrella delle progress-bar

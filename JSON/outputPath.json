@@ -1,0 +1,8 @@
+
+{
+    "outputpath1": "materials/output/VideoProcessing/FrameInterpolation/InterpolatedVideo.avi",
+    "outputPath2": "materials/output/VideoProcessing/VideoUpscaling/InterpolatedVideo-Upscaled.avi",
+    "outputPath3": "materials/output/VideoProcessing/FrameInterpolation/UpscaledVideo.avi" ,
+    "outputPath4": "materials/output/VideoProcessing/VideoUpscaling/UpscaledVideo-Interpolated.avi",
+    "comment": "interpolation first: path1 = salva il video interpolato, path2 = salva il video interpolato e upscalato. upscaling first: path3 = salva il video upscalato, path4 = salva il video upscalato e interpolato"
+}
