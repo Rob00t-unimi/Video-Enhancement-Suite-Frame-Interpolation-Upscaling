@@ -18,7 +18,7 @@ For computational complexity reasons, I have inverted the operations, first I in
 
 ### Instructions:
 
-- Run GUI.py
+- Run main.py
 - Select the video
 - Select parameters
 - Run
