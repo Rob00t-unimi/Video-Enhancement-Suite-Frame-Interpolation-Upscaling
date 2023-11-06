@@ -170,7 +170,7 @@ def select_video():
     file_path = filedialog.askopenfilename(filetypes=[("Video files", "*.mp4 *.avi *.mkv")])
     if file_path:
         selected_video = file_path
-        selected_video_label.config(text=f"Video selezionato: {selected_video}")
+        selected_video_label.config(text=f"Video selezionato: {selected_video}", wraplength=1000)
         update_resolution_info()
         update_fps_info()
         
@@ -285,8 +285,9 @@ def apply_css_style(widget, style):
             widget.configure(**{prop: value})
 
 root = tk.Tk()
-root.geometry("1500x1100")  # Imposta la larghezza a 720 pixel e l'altezza a 1080 pixel
+root.geometry("1280x720")  # Imposta la larghezza a 720 pixel e l'altezza a 1080 pixel
 #root.state('zoomed')
+root.resizable(width=False, height=True)
 
 style = ThemedStyle(root)
 style = Style(theme="superhero")
@@ -295,10 +296,37 @@ main_frame = tk.Frame(root)
 apply_css_style(main_frame, "main-div")
 main_frame.pack(fill="both", expand=True)
 
-############################################################################################    Grafica
+
+# Creazione di un Canvas per abilitare lo scrolling
+canvas = tk.Canvas(main_frame)
+canvas.pack(side="left", fill="both", expand=True)
+
+# Crea una finestra di scorrimento verticale per il Canvas
+scrollbar = tk.Scrollbar(main_frame, command=canvas.yview)
+scrollbar.pack(side="right", fill="y", expand=True)
+
+# Configura il Canvas per utilizzare la finestra di scorrimento
+canvas.configure( yscrollcommand=scrollbar.set)
 
 # Calculate heights based on percentages of the total window height
 total_height = root.winfo_screenheight()  # Get the screen height
+total_width = root.winfo_screenwidth()
+canvas.config(width=total_width, height=total_height)
+
+# Crea un frame interno al Canvas
+container_frame = tk.Frame(canvas)
+canvas.create_window((0, 0), window=container_frame, anchor="n" )
+
+# Aggiungi il tuo contenuto al container_frame
+# (Tutti i widget che desideri scorrere)
+
+# Aggiungi un binding per aggiornare la visualizzazione del Canvas quando si fa lo scrolling
+container_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+
+# Abilita il Canvas per lo scrolling con la barra di scorrimento
+canvas.bind_all("<MouseWheel>", lambda e: canvas.yview_scroll(int(-1*(e.delta/120)), "units"))
+
+############################################################################################    Grafica
 
 title_height = (total_height * 7) // 100
 container_height = (total_height * 40) // 100
@@ -308,17 +336,17 @@ parameters_height = (total_height * 10) // 100
 start_button_height = (total_height * 7) // 100
 
 # Define frames with calculated heights
-title_frame = tk.Frame(main_frame, height=title_height)
+title_frame = tk.Frame(container_frame, height=title_height)
 apply_css_style(title_frame, "title-div")
 title_frame.pack(fill="x")
 title_label = tk.Label(title_frame, text="Video Frame Interpolation and Upscaling", font=("Arial", 24))
 title_label.pack()
 
-container_frame = tk.Frame(main_frame, height=container_height)
-apply_css_style(container_frame, "container-div")
-container_frame.pack(fill="both", expand=True)
+container_frame2 = tk.Frame(container_frame, height=container_height)
+apply_css_style(container_frame2, "container-div")
+container_frame2.pack(fill="both", expand=True)
 
-video_selector_frame = tk.Frame(container_frame)
+video_selector_frame = tk.Frame(container_frame2)
 apply_css_style(video_selector_frame, "video-selector-div")
 video_selector_frame.pack(side="left", fill="both", expand=True)
 
@@ -339,13 +367,12 @@ fps_label.pack(padx=10, pady=5)
 spacer_frame2 = tk.Frame(video_selector_frame)
 spacer_frame2.pack(side="top", fill="both", expand=True)
 
-video_preview_frame = tk.Frame(container_frame)
+video_preview_frame = tk.Frame(container_frame2)
 apply_css_style(video_preview_frame, "video-preview-div")
-video_preview_frame.pack(side="right", fill="both", expand=True, padx=0, pady=0)
+video_preview_frame.pack(side="right", fill="both", expand=True, padx=5, pady=5)
 
-
-selected_video_label = tk.Label(video_preview_frame, text="Nessun Video Selezionato", font=("Arial", 12))
-selected_video_label.pack(side="top", fill="both", expand=True)
+selected_video_label = tk.Label(container_frame, text="Nessun Video Selezionato", font=("Arial", 12))
+selected_video_label.pack(fill="x", expand=True, pady=10)
 
 preview_label = tk.Label(video_preview_frame, image=preview_image)
 preview_label.pack(fill="both", expand=True)
@@ -353,7 +380,7 @@ preview_label.pack(fill="both", expand=True)
 spacer_frame3 = tk.Frame(video_preview_frame)
 spacer_frame3.pack(side="top", fill="both", expand=True)
 
-sliders_frame = tk.Frame(main_frame, height=sliders_height)
+sliders_frame = tk.Frame(container_frame, height=sliders_height)
 apply_css_style(sliders_frame, "sliders-div")
 sliders_frame.pack(fill="x")
 
@@ -384,7 +411,7 @@ numFrame_scale = tk.Scale(slider3, from_=1, to=15, length=300, orient="horizonta
 numFrame_scale.set(numFrameInterpol)
 numFrame_scale.pack()  
 
-radio_buttons_frame = tk.Frame(main_frame, height=radio_buttons_height)
+radio_buttons_frame = tk.Frame(container_frame, height=radio_buttons_height)
 apply_css_style(radio_buttons_frame, "radio-buttons-div")
 radio_buttons_frame.pack(fill="x")
 
@@ -406,7 +433,7 @@ radio_preset.pack(side="left", padx=20)
 radio_customize = tk.Radiobutton(radio_buttons_container, text="Personalizza Filtro", variable=radio_value, value=1, command=selectFilterType)
 radio_customize.pack(side="left")
 
-parameters_frame = tk.Frame(main_frame, height=parameters_height)
+parameters_frame = tk.Frame(container_frame, height=parameters_height)
 apply_css_style(parameters_frame, "parameters-div")
 parameters_frame.pack(fill="both", expand=True)
 
@@ -445,7 +472,7 @@ def create_spinbox(key, row):
 for i, key in enumerate(keys):
     create_spinbox(key, i + 1)
 
-start_button_frame = tk.Frame(main_frame, height=start_button_height)
+start_button_frame = tk.Frame(container_frame, height=start_button_height)
 apply_css_style(start_button_frame, "start-button-div")
 start_button_frame.pack(fill="x")
 start_button = tk.Button(start_button_frame, text="Conferma e Inizia", command=confirm, font=("Arial", 18))
