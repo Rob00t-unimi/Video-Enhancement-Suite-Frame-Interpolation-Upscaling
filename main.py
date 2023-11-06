@@ -8,6 +8,7 @@ from demo import start
 import time
 from tkinter import ttk
 import webbrowser
+import locale
 
 
 ############################################################################################    Variabili Globali
@@ -200,10 +201,11 @@ def cv2_to_tkinter_photoimage(cv2_image, width, height):
 
 # Inizializza l'anteprima dell'immagine come None
 preview_image = None
+locale.setlocale(locale.LC_ALL, 'en_US')
 
 def update_zoom_factor(value):
     global zoom_factor
-    zoom_factor = float(value)
+    zoom_factor = float(locale.atof(value))
     update_resolution_info()
     zoom_label.config(text=f"Seleziona upscaling zoom factor: {zoom_factor:.2f}x")
 
@@ -389,7 +391,7 @@ apply_css_style(slider1, "slider")
 slider1.pack(side="left", fill="both", expand=True)
 zoom_label = tk.Label(slider1, text=f"Seleziona upscaling zoom factor: {zoom_factor:.2f}x", font=("Arial", 15))
 zoom_label.pack()
-zoom_scale = tk.Scale(slider1, from_=1.0, to=10.0, length=300, orient="horizontal", command=update_zoom_factor)
+zoom_scale = tk.Scale(slider1, from_=1.0, to=10.0, resolution=0.5, length=300, orient="horizontal", command=update_zoom_factor)
 zoom_scale.set(zoom_factor)
 zoom_scale.pack()
 
