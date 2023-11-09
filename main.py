@@ -6,11 +6,13 @@ from tkinter import filedialog
 import cv2
 from demo import start
 import time
-from tkinter import ttk
+
 import webbrowser
 import locale
 import os
 import platform
+import ttkbootstrap as ttk
+from ttkbootstrap.constants import *
 
 
 ############################################################################################    Variabili Globali
@@ -96,7 +98,7 @@ def confirm():
         print("Errore: Nessun video selezionato")
         return
 
-    demo_window = tk.Toplevel(root)
+    demo_window = tk.Toplevel(window)
     demo_window.title("Esecuzione Demo")
 
     frame_label1 = tk.Label(demo_window, text="Interpolazione di frame", font=("Arial", 12))
@@ -210,7 +212,8 @@ def select_video():
     file_path = filedialog.askopenfilename(filetypes=[("Video files", "*.mp4 *.avi *.mkv")])
     if file_path:
         selected_video = file_path
-        selected_video_label.config(text=f"Video selezionato: {selected_video}", wraplength=1000)
+        selected_video_label.config(text=f"Video selezionato: {selected_video}", wraplength=300, anchor="nw", justify="right")
+
         update_resolution_info()
         update_fps_info()
         
@@ -224,6 +227,7 @@ def select_video():
                 preview_image = cv2_to_tkinter_photoimage(frame, width=frame_width, height=frame_height)
                 # Visualizza l'anteprima dell'immagine
                 preview_label.config(image=preview_image)
+                preview_label.configure(background=None)
                 preview_label.image = preview_image
             cap.release()
             
@@ -231,7 +235,7 @@ def cv2_to_tkinter_photoimage(cv2_image, width, height):
     from PIL import Image, ImageTk
     cv2_image = cv2.cvtColor(cv2_image, cv2.COLOR_BGR2RGB)
     pil_image = Image.fromarray(cv2_image)
-    new_width = 300
+    new_width = 365
     new_height = int(height*new_width/width)
     print(new_width, new_height)
     pil_image = pil_image.resize((new_height, new_width), Image.BILINEAR)
@@ -263,7 +267,7 @@ def update_resolution_info():
             final_upscaling = zoom_factor ** iterations
             final_width = int(initial_width * final_upscaling)
             final_height = int(initial_height * final_upscaling)
-            resolution_label.config(text=f"Risoluzione video: {initial_width}x{initial_height}\nRisoluzione dopo upscaling: {final_width}x{final_height}")
+            resolution_label.config(text=f"Risoluzione video: {initial_width}x{initial_height}\nRisoluzione dopo upscaling: {final_width}x{final_height}", justify="left")
             cap.release()
 
 def update_numFrameInterpol(value):
@@ -280,19 +284,19 @@ def update_fps_info():
             originalSeconds = frame_count / fps
             tot_finalFrames = numFrameInterpol * (frame_count - 1)
             finalFps = tot_finalFrames / originalSeconds
-            fps_label.config(text=f"FPS iniziali: {fps:.2f}\nFPS finali: {finalFps:.2f}")
+            fps_label.config(text=f"FPS iniziali: {fps:.2f}\nFPS finali: {finalFps:.2f}", justify="left")
             cap.release()
 
 def selectFilterType():
     if radio_value.get() == 0:  # Select a preset filter
-        params_frame.pack_forget()
-        preset_filter_menu.pack()
+        params_frame.grid_forget()
+        preset_filter_menu.grid(column=1, row=0, sticky="E", padx=25)  
         
     else:
-        preset_filter_menu.pack_forget()
+        preset_filter_menu.grid_forget()
         global selectedfilter
         selectedfilter = filters["Default"].copy()
-        params_frame.pack()
+        params_frame.grid(columnspan=2, padx=30, sticky="we")
        
 
 def on_filter_selection_change(*args):
@@ -316,183 +320,135 @@ def show_documentation():
     webbrowser.open("documentation\documentation.html")
 
 ############################################################################################    Stile
-# Carica gli stili dal file JSON
-with open('JSON/style.json', 'r') as styles_file:
-    css_styles = json.load(styles_file)
-
-def apply_css_style(widget, style):
-    if style in css_styles:
-        for prop, value in css_styles[style].items():
-            widget.configure(**{prop: value})
-
-root = tk.Tk()
-root.geometry("1280x720")  # Imposta la larghezza a 720 pixel e l'altezza a 1080 pixel
-#root.state('zoomed')
-root.resizable(width=False, height=True)
-
-style = ThemedStyle(root)
-style = Style(theme="superhero")
-
-main_frame = tk.Frame(root)
-apply_css_style(main_frame, "main-div")
-main_frame.pack(fill="both", expand=True)
 
 
-# Creazione di un Canvas per abilitare lo scrolling
-canvas = tk.Canvas(main_frame)
-canvas.pack(side="left", fill="both", expand=True)
 
-# Crea una finestra di scorrimento verticale per il Canvas
-scrollbar = tk.Scrollbar(main_frame, command=canvas.yview)
-scrollbar.pack(side="right", fill="y", expand=True)
 
-# Configura il Canvas per utilizzare la finestra di scorrimento
-canvas.configure( yscrollcommand=scrollbar.set)
 
-# Calculate heights based on percentages of the total window height
-total_height = root.winfo_screenheight()  # Get the screen height
-total_width = root.winfo_screenwidth()
-canvas.config(width=total_width, height=total_height)
 
-# Crea un frame interno al Canvas
-container_frame = tk.Frame(canvas)
-canvas.create_window((0, 0), window=container_frame, anchor="n" )
 
-# Aggiungi il tuo contenuto al container_frame
-# (Tutti i widget che desideri scorrere)
+window = tk.Tk()
+window.geometry("1280x720")
+window.title("Frame interpolation and Upscaling")
 
-# Aggiungi un binding per aggiornare la visualizzazione del Canvas quando si fa lo scrolling
-container_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+window.grid_rowconfigure(1, weight=1)
+window.grid_columnconfigure(0, weight=1)
 
-# Abilita il Canvas per lo scrolling con la barra di scorrimento
-canvas.bind_all("<MouseWheel>", lambda e: canvas.yview_scroll(int(-1*(e.delta/120)), "units"))
+style = ThemedStyle(window)
+style = Style(theme="darkly")
 
-############################################################################################    Grafica
+# CONTAINERS
 
-title_height = (total_height * 7) // 100
-container_height = (total_height * 40) // 100
-sliders_height = (total_height * 7) // 100
-radio_buttons_height = (total_height * 14) // 100
-parameters_height = (total_height * 10) // 100
-start_button_height = (total_height * 7) // 100
+container = tk.Frame(window)
+container.grid(column=0, row=1, sticky="nsew")
+container.grid_columnconfigure(0, weight=1)  # Prima colonna
+container.grid_columnconfigure(1, weight=2)  # Seconda colonna
+container.grid_columnconfigure(2, weight=5)  # Terza colonna
+container.grid_rowconfigure(0, weight=1)
 
-# Define frames with calculated heights
-title_frame = tk.Frame(container_frame, height=title_height)
-apply_css_style(title_frame, "title-div")
-title_frame.pack(fill="x")
-title_label = tk.Label(title_frame, text="Video Frame Interpolation and Upscaling", font=("Arial", 24))
-title_label.pack()
+title_frame = tk.Frame(window, borderwidth=1, relief="solid")
+title_frame.grid(column=0, row=0, sticky="we")
+title_frame.grid_columnconfigure(0, weight=1)
 
-container_frame2 = tk.Frame(container_frame, height=container_height)
-apply_css_style(container_frame2, "container-div")
-container_frame2.pack(fill="both", expand=True)
+col1 = tk.Frame(container, borderwidth=1, relief="solid")
+col1.grid(column=0, row=0, sticky="nsew")  
+col1.grid_columnconfigure(0, weight=1) 
 
-video_selector_frame = tk.Frame(container_frame2)
-apply_css_style(video_selector_frame, "video-selector-div")
-video_selector_frame.pack(side="left", fill="both", expand=True)
+col2 = tk.Frame(container, borderwidth=1, relief="solid")
+col2.grid(column=1, row=0, sticky="nsew")
+col2.grid_columnconfigure(0, weight=1) 
 
+col3 = tk.Frame(container, borderwidth=1, relief="solid")
+col3.grid(column=2, row=0, sticky="nsew")
+col3.grid_rowconfigure(0, weight=2)
+col3.grid_rowconfigure(1, weight=2)
+col3.grid_columnconfigure(0, weight=1) 
+
+row3 = tk.Frame(container, borderwidth=1, relief="solid")
+row3.grid(column=0, row=4, sticky="we", columnspan=3)
+row3.grid_columnconfigure(0, weight=1)
+
+buttonFrame = tk.Frame(row3)
+buttonFrame.grid(row=0, column=0, padx=10, pady=10, sticky="E") 
+
+# TITLE
+titleLabel = tk.Label(title_frame, text="Video Frame Interpolation and Upscaling", font=("Helvetica", 16, "bold"))
+titleLabel.grid(padx=10, pady=10)
+
+# COL 1
 Order_bool = tk.BooleanVar()
 Order_bool.set(interpolationFirst)
-Order_bool_btn = tk.Checkbutton(video_selector_frame, text="Interpolation First", variable=Order_bool, command=lambda: change_order(Order_bool.get()), font=("Arial", 15))
-Order_bool_btn.pack(side="top", fill="both", expand=True)
-
-select_video_button = tk.Button(video_selector_frame, text="Seleziona Video", font=("Arial", 18), command=select_video)
-select_video_button.pack()
-
-resolution_label = tk.Label(video_selector_frame, text="")
-resolution_label.pack(padx=10, pady=20)
-
-fps_label = tk.Label(video_selector_frame, text="")
-fps_label.pack(padx=10, pady=5)
-
-spacer_frame2 = tk.Frame(video_selector_frame)
-spacer_frame2.pack(side="top", fill="both", expand=True)
-
-video_preview_frame = tk.Frame(container_frame2)
-apply_css_style(video_preview_frame, "video-preview-div")
-video_preview_frame.pack(side="right", fill="both", expand=True, padx=5, pady=5)
-
-selected_video_label = tk.Label(container_frame, text="Nessun Video Selezionato", font=("Arial", 12))
-selected_video_label.pack(fill="x", expand=True, pady=10)
-
-preview_label = tk.Label(video_preview_frame, image=preview_image)
-preview_label.pack(fill="both", expand=True)
-
-spacer_frame3 = tk.Frame(video_preview_frame)
-spacer_frame3.pack(side="top", fill="both", expand=True)
-
-sliders_frame = tk.Frame(container_frame, height=sliders_height)
-apply_css_style(sliders_frame, "sliders-div")
-sliders_frame.pack(fill="x")
-
-slider1 = tk.Frame(sliders_frame)
-apply_css_style(slider1, "slider")
-slider1.pack(side="left", fill="both", expand=True)
-zoom_label = tk.Label(slider1, text=f"Seleziona upscaling zoom factor: {zoom_factor:.2f}x", font=("Arial", 15))
-zoom_label.pack()
-zoom_scale = tk.Scale(slider1, from_=1.0, to=10.0, resolution=0.5, length=300, orient="horizontal", command=update_zoom_factor)
-zoom_scale.set(zoom_factor)
-zoom_scale.pack()
-
-slider2 = tk.Frame(sliders_frame)
-apply_css_style(slider2, "slider")
-slider2.pack(side="left", fill="both", expand=True)
-iterations_label = tk.Label(slider2, text=f"Seleziona il numero di iterazioni di upscaling: {iterations}", font=("Arial", 15))
-iterations_label.pack()
-iterations_scale = tk.Scale(slider2, from_=1, to=10, length=300, orient="horizontal", command=update_iterations)
-iterations_scale.set(iterations)
-iterations_scale.pack()
-
-slider3 = tk.Frame(sliders_frame)
-apply_css_style(slider3, "slider")
-slider3.pack(side="left", fill="both", expand=True)
-numFrame_label = tk.Label(slider3, text=f"Seleziona il numero di frame da interpolare: {numFrameInterpol}", font=("Arial", 15))
-numFrame_label.pack()
-numFrame_scale = tk.Scale(slider3, from_=1, to=15, length=300, orient="horizontal", command=update_numFrameInterpol)
-numFrame_scale.set(numFrameInterpol)
-numFrame_scale.pack()  
-
-radio_buttons_frame = tk.Frame(container_frame, height=radio_buttons_height)
-apply_css_style(radio_buttons_frame, "radio-buttons-div")
-radio_buttons_frame.pack(fill="x")
-
-# Create the label and radio buttons
-radio_label = tk.Label(radio_buttons_frame, text="Seleziona tipo di filtro", font=("Arial", 18))
-radio_label.pack()
-
-# Create a container frame for the radio buttons with padding
-radio_buttons_container = tk.Frame(radio_buttons_frame)
-apply_css_style(radio_buttons_container, "radio-buttons-container")
-radio_buttons_container.pack(padx=10, pady=10)
-
-radio_value = tk.IntVar()
-radio_value.set(0)
-
-radio_preset = tk.Radiobutton(radio_buttons_container, text="Seleziona un filtro preimpostato", variable=radio_value, value=0, command=selectFilterType)
-radio_preset.pack(side="left", padx=20)
-
-radio_customize = tk.Radiobutton(radio_buttons_container, text="Personalizza Filtro", variable=radio_value, value=1, command=selectFilterType)
-radio_customize.pack(side="left")
-
-parameters_frame = tk.Frame(container_frame, height=parameters_height)
-apply_css_style(parameters_frame, "parameters-div")
-parameters_frame.pack(fill="both", expand=True)
+orderCheckSelection = ttk.Checkbutton(col1, text="Interpolation First", variable=Order_bool, command=lambda: change_order(Order_bool.get()), bootstyle="round-toggle")
+orderCheckSelection.grid( sticky="W", padx=20, pady=20)
 
 boolean_var = tk.BooleanVar()
 boolean_var.set(selectedfilter["showEdges"])
-boolean_checkbutton = tk.Checkbutton(parameters_frame, text="Show Edges", variable=boolean_var, command=lambda: update_input_value("showEdges", boolean_var.get()))
-boolean_checkbutton.pack(padx=10, pady=15)
+boolean_checkbutton = ttk.Checkbutton(col1, text="Show Edges", variable=boolean_var, command=lambda: update_input_value("showEdges", boolean_var.get()), bootstyle="round-toggle")
+boolean_checkbutton.grid( sticky="W", padx=20)
+
+radio_label = tk.Label(col1, text="Seleziona tipo di filtro", font=("Helvetica", 12, "bold"))
+radio_label.grid( sticky="W", padx=17, pady=(30, 20))
+
+radio_value = tk.IntVar()
+radio_value.set(0)
+filterRadioSelection = tk.Radiobutton(col1, text="Filtri predefiniti", variable=radio_value, value=0, command=selectFilterType, font=("Helvetica", 12))
+filterRadioSelection.grid( sticky="W", padx=30 )
+
+filterRadioSelection = tk.Radiobutton(col1, text="Filtri personalizzati", variable=radio_value, value=1, command=selectFilterType, font=("Helvetica", 12))
+filterRadioSelection.grid( sticky="W", padx=30 )
+
+# COL 2
+
+frame1 = tk.Frame(col2, padx=20, pady=20)
+frame1.grid(row=0, column=0, sticky='we')
+frame1.columnconfigure(0, weight=1)
+
+zoom_label = tk.Label(frame1, text=f"Seleziona upscaling zoom factor: {zoom_factor:.2f}x", font=("Helvetica", 12), anchor="w")
+zoom_label.grid(columnspan=2, sticky='W')
+
+zoom_scale = tk.Scale(frame1, from_=1.0, to=10.0, resolution=0.5, orient="horizontal", command=update_zoom_factor)
+zoom_scale.set(zoom_factor)
+zoom_scale.grid(columnspan=2, sticky='we', padx=20, pady=5)
+
+frame2 = tk.Frame(col2, padx=20)
+frame2.grid(row=1, column=0, sticky='we')
+frame2.columnconfigure(0, weight=1)
+
+iterations_label = tk.Label(frame2, text=f"Seleziona il numero di iterazioni di upscaling: {iterations}", font=("Helvetica", 12), anchor="w")
+iterations_label.grid(columnspan=2, sticky='W')
+
+iterations_scale = tk.Scale(frame2, from_=1, to=10, orient="horizontal", command=update_iterations)
+iterations_scale.set(iterations)
+iterations_scale.grid(columnspan=2, sticky='we', padx=20, pady=5)
+
+frame3 = tk.Frame(col2, padx=20, pady=20)
+frame3.grid(row=2, column=0, sticky='we')
+frame3.columnconfigure(0, weight=1)
+
+numFrame_label = tk.Label(frame3, text=f"Seleziona il numero di frame da interpolare: {numFrameInterpol}", font=("Helvetica", 12), anchor="w")
+numFrame_label.grid(columnspan=2, sticky='W')
+
+numFrame_scale = tk.Scale(frame3, from_=1, to=15, orient="horizontal", command=update_numFrameInterpol)
+numFrame_scale.set(numFrameInterpol)
+numFrame_scale.grid(columnspan=2, sticky='we', padx=20, pady=5)
+
+frame4 = tk.Frame(col2, padx=20, pady=20)
+frame4.grid(row=3, column=0, sticky='we')
+  
+filterLabel = tk.Label(frame4, text="Filter:", font=("Helvetica", 12, "bold"))
+filterLabel.grid(column=0, row=0, pady=15, sticky="W")
 
 filter_selection = tk.StringVar()
 filter_selection.set("Default")
 filter_selection.trace_add("write", on_filter_selection_change)
 preset_filters = list(filters.keys())
-preset_filter_menu = ttk.Combobox(parameters_frame, textvariable=filter_selection, values=preset_filters)
-preset_filter_menu.pack()
+preset_filter_menu = ttk.Combobox(frame4, textvariable=filter_selection, values=preset_filters)
+preset_filter_menu.grid(column=1, row=0, sticky="E", padx=25)  
 
-params_frame = tk.Frame(parameters_frame)
-apply_css_style(params_frame, "inner-div")
-params_frame.pack_forget()
+# PARAMS
+params_frame = tk.Frame(col2)
+params_frame.grid(columnspan=2, padx=30, sticky="we")  
+params_frame.grid_forget() 
 
 input_values = {key: tk.StringVar(value=str(selectedfilter[key])) for key in selectedfilter}
 
@@ -507,47 +463,46 @@ def create_spinbox(key, row):
     label = ttk.Label(params_frame, text=labels[row-1])
     label.grid(row=row, column=0, pady=5, sticky="w")
     spinbox = ttk.Spinbox(params_frame, textvariable=input_values[key], from_=min_value, to=max_value, increment=step)
-    spinbox.grid(row=row, column=1, pady=5, padx=20, sticky="w")
-    spinbox.bind("<FocusOut>", lambda event, k=key: update_input_value(k, spinbox.get()))
+    spinbox.grid(row=row, column=1, padx=(15, 0), pady=5, sticky="E")
+    spinbox.bind("<<Increment>>", lambda event, k=key: update_input_value(k, round(float(spinbox.get())+0.1, 1)))
+    spinbox.bind("<<Decrement>>", lambda event, k=key: update_input_value(k, round(float(spinbox.get())-0.1, 1)))
+    spinbox.bind("<KeyRelease>", lambda event, k=key: update_input_value(k, spinbox.get()))
 
 for i, key in enumerate(keys):
     create_spinbox(key, i + 1)
 
-start_button_frame = tk.Frame(container_frame, height=start_button_height)
-apply_css_style(start_button_frame, "start-button-div")
-start_button_frame.pack(fill="x")
-start_button = tk.Button(start_button_frame, text="Conferma e Inizia", command=confirm, font=("Arial", 18))
-start_button.grid(row=0, column=1, padx=10, pady=10)
-start_button_frame.columnconfigure(2, weight=1)
+preview_frame = tk.Frame(col3)
+preview_frame.grid(sticky="nsew", padx=20, pady=20)
+preview_frame.columnconfigure(0, weight=1)
+preview_frame.rowconfigure(0, weight=1)
 
-show_doc_button = tk.Button(start_button_frame, text="Info", command=show_documentation, font=("Arial", 14))
-show_doc_button.grid(row=0, column=3, padx=0, pady=10)
+preview_label = tk.Label(preview_frame, image=preview_image, anchor="center")
+preview_label.grid(column=0, row=0, sticky="nsew")
+preview_label.configure(background="black")
 
-label1 = tk.Label(start_button_frame)
-label1.grid(row=0, column=0, padx=10, pady=10)
-start_button_frame.columnconfigure(0, weight=2)
+dettaglioVideo = tk.Frame(col3, borderwidth=1, relief="solid")
+dettaglioVideo.grid( sticky="nsew")
+dettaglioVideo.columnconfigure(0, weight=1)
 
-label3 = tk.Label(start_button_frame)
-label1.grid(row=0, column=0, padx=10, pady=10)
-start_button_frame.columnconfigure(2, weight=2)
+select_video_button = ttk.Button(dettaglioVideo, text="Seleziona Video", command=select_video, bootstyle=( LIGHT, OUTLINE))
+select_video_button.grid(column=0, row=0, sticky="nw", padx=20, pady=20)
 
-# Update the style in style.json
-with open('JSON/style.json', 'r') as styles_file:
-    css_styles = json.load(styles_file)
+selected_video_label = tk.Label(dettaglioVideo, text="Nessun Video Selezionato", anchor="nw")
+selected_video_label.grid(column=1, row=0, padx=20, pady=20, sticky="ne")
 
-css_styles['show-doc-button-style'] = {
-    "background": "lightgray",  # Change to the desired background color
-    "font": "Arial 15",
-    "foreground": "blue"  # Text color
-}
+resolution_label = tk.Label(dettaglioVideo, text=" ", anchor="w")
+resolution_label.grid(column=0, row=1, padx=20, pady=20, sticky="W")
 
-# Apply the updated style to the button
-show_doc_button_style = "show-doc-button-style"  # Use the updated style name
-apply_css_style(show_doc_button, show_doc_button_style)
+fps_label = tk.Label(dettaglioVideo, text=" ", anchor="w")
+fps_label.grid(column=1, row=1, padx=20, pady=20, sticky="W")
 
+# BUTTONS ROW
 
-root.mainloop()
+startButton = ttk.Button(buttonFrame, text="Conferma e Inizia", command=confirm, bootstyle=( PRIMARY ))
+startButton.grid(row=0, column=1)   
 
+documentationButton = ttk.Button(buttonFrame, text="Info", bootstyle=(INFO, OUTLINE), command=show_documentation)
+documentationButton.grid(row=0, column=0, padx=10)
 
-#modificare
-#interrompere il thread di processing quando si chiude la finestrella delle progress-bar
+if __name__ == "__main__":
+    window.mainloop()
