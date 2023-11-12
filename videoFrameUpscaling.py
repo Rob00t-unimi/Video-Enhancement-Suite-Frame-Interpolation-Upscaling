@@ -67,8 +67,6 @@ def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIte
             sharp_k_center = filtersValues["sharp_k_center"]
             Laplacian_k_size = filtersValues["Laplacian_k_size"]
             threshold_value = filtersValues["threshold_value"]
-            blur_k_dim_2 = filtersValues["blur_k_dim_2"]
-            blur_sigma_x_2 = filtersValues["blur_sigma_x_2"]
                 
             # Applica il filtro bilaterale a upscaledImage (blurring)
             blurred_image = cv2.GaussianBlur(tmp, (blur_k_dim, blur_k_dim), blur_sigma_x)      # smoothing
@@ -92,7 +90,6 @@ def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIte
             # Sostituisci solo gli edge rilevati dalla maschera binaria con gli edge sharpened
             if filtersValues["showEdges"] is False:
                 result[binary_mask == 255] = sharpened_image[binary_mask == 255]
-                result = cv2.GaussianBlur(result, (blur_k_dim_2, blur_k_dim_2), blur_sigma_x_2)      #ulteriore smoothing
             else:
                 result[binary_mask == 255] = 255
 

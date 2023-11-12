@@ -26,11 +26,10 @@ selectedfilter = {
     "sharp_k_center": 7,
     "Laplacian_k_size": 3,
     "threshold_value": 30,
-    "blur_k_dim_2": 5,
-    "blur_sigma_x_2": 0.5,
+    "blur_k_dim_2": 3,
     "showEdges": False
 }
-interpolationFirst = True
+interpolationFirst = False
 
 # Carica i dati dal file JSON
 with open('JSON/filtriPredefiniti.json', 'r') as json_file:
@@ -436,8 +435,8 @@ min_value = 0
 max_value = 10
 step = 0.1
 
-keys = ["blur_k_dim", "blur_sigma_x", "sharp_k_center", "Laplacian_k_size", "threshold_value", "blur_k_dim_2", "blur_sigma_x_2"]
-labels = ["Dimensione kernel primo blurring", "Sigma primo blurring", "Dimensione del kernel di sharpening", "Dimensione del kernel laplaciano (edge detector)", "Soglia di binarizzazione", "Dimensione del kernel secondo blurring", "Sigma secondo blurring"]
+keys = ["blur_k_dim", "blur_sigma_x", "sharp_k_center", "Laplacian_k_size", "threshold_value", "blur_k_dim_2"]
+labels = ["Dimensione del kernel id blurring", "Sigma di blurring", "Dimensione del kernel di sharpening", "Dimensione del kernel laplaciano (edge detector)", "Soglia di binarizzazione", "Dimensione del kernel di Denoising"]
 
 input_values = {key: tk.StringVar(value=str(selectedfilter[key])) for key in selectedfilter}
 

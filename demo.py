@@ -30,9 +30,9 @@ def start(selected_video, iterazioniUpscaling, numInterpolateFrames, zoom_factor
     # # filtersValues = None
     increaseContrast = None
 
-    def start_frame_interpolation(input_path, output_path, numInterpolateFrames, updateProgress1):
+    def start_frame_interpolation(input_path, output_path, numInterpolateFrames, updateProgress1, filtersValues):
         print("Starting Frame Interpolation...")
-        frameInterpolation(input_path, output_path, numInterpolateFrames, updateProgress1)
+        frameInterpolation(input_path, output_path, numInterpolateFrames, updateProgress1, filtersValues)
         print("Final Video There:" + output_path)
 
     def start_upscaling(input_path, output_path, iterazioniUpscaling, zoom_factor, filtersValues, updateProgress2):
@@ -41,11 +41,11 @@ def start(selected_video, iterazioniUpscaling, numInterpolateFrames, zoom_factor
         print("New Video There:" + output_path)
 
     if interpolationFirst:
-        start_frame_interpolation(selected_video, outputPath1, numInterpolateFrames, updateProgress1)
+        start_frame_interpolation(selected_video, outputPath1, numInterpolateFrames, updateProgress1, filtersValues)
         start_upscaling(outputPath1, outputPath2, iterazioniUpscaling, zoom_factor, filtersValues, updateProgress2)
     else:
         start_upscaling(selected_video, outputPath3,iterazioniUpscaling, zoom_factor, filtersValues, updateProgress2)
-        start_frame_interpolation(outputPath3, outputPath4, numInterpolateFrames, updateProgress1)
+        start_frame_interpolation(outputPath3, outputPath4, numInterpolateFrames, updateProgress1, filtersValues)
     print("End of System")
 
 

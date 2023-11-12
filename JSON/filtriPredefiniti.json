@@ -5,28 +5,7 @@
         "sharp_k_center": 7,
         "Laplacian_k_size": 3,
         "threshold_value": 30,
-        "blur_k_dim_2": 5,
-        "blur_sigma_x_2": 0.5,
-        "showEdges": false
-    },
-    "bees": {
-        "blur_k_dim": 5,
-        "blur_sigma_x": 1.5,
-        "sharp_k_center": 7,
-        "Laplacian_k_size": 3,
-        "threshold_value": 9,
-        "blur_k_dim_2": 5,
-        "blur_sigma_x_2": 1,
-        "showEdges": false
-    },
-    "Bees360p": {
-        "blur_k_dim": 21,
-        "blur_sigma_x": 2,
-        "sharp_k_center": 21,
-        "Laplacian_k_size": 3,
-        "threshold_value": 4,
-        "blur_k_dim_2": 15,
-        "blur_sigma_x_2": 1,
+        "blur_k_dim_2": 3,
         "showEdges": false
     },
     "Lights10": {
@@ -35,8 +14,7 @@
         "sharp_k_center": 5,
         "Laplacian_k_size": 1,
         "threshold_value": 10,
-        "blur_k_dim_2": 5,
-        "blur_sigma_x_2": 0.5,
+        "blur_k_dim_2": 3,
         "showEdges": false
     }
 }

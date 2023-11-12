@@ -3,8 +3,10 @@ import numpy as np
 import sys
 import time
 
-def frameInterpolation(input_video_path, output_video_path, num_adding_frames, updateProgress1):
+def frameInterpolation(input_video_path, output_video_path, num_adding_frames, updateProgress1, filtersValues):
     #NumAdiingFrames --> elaborazione di n frames tra ogni coppia di frame originali, gli originali vengono scartati
+
+    blur_k_dim_2 = filtersValues["blur_k_dim_2"]
 
     capture = cv2.VideoCapture(input_video_path)
 
@@ -89,7 +91,7 @@ def frameInterpolation(input_video_path, output_video_path, num_adding_frames, u
                 flowb[by, bx, :] = frame[y, x]
 
                 final = cv2.addWeighted(flowf, 1 - part * t, flowb, part * t, 0)
-                final = cv2.medianBlur(final, 3)
+                final = cv2.medianBlur(final, blur_k_dim_2)    #applica un filtro di denoising per rumore sale e pepe
                 out.write(final)
                 state += 1
                 loopState(state)  # ad ogni scrittura di un nuovo frame aggiorna la % di export
