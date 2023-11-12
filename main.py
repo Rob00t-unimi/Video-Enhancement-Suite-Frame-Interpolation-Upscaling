@@ -6,7 +6,6 @@ from tkinter import filedialog
 import cv2
 from demo import start
 import time
-
 import webbrowser
 import locale
 import os
@@ -105,7 +104,7 @@ def confirm():
     frame_label1.grid(row=0, column=0, padx=10, pady=5)
 
     # Creazione di una barra di avanzamento determinata per la prima percentuale
-    progress1 = ttk.Progressbar(demo_window, length=300, mode="determinate")
+    progress1 = ttk.Progressbar(demo_window, length=300, mode="determinate", maximum=100, value=0)
     progress1.grid(row=1, column=0, padx=10, pady=5)
 
     current_label1 = tk.Label(demo_window, text="", padx=10)
@@ -115,7 +114,7 @@ def confirm():
     frame_label2.grid(row=3, column=0, padx=10, pady=5)
 
     # Creazione di una barra di avanzamento determinata per la seconda percentuale
-    progress2 = ttk.Progressbar(demo_window, length=300, mode="determinate")
+    progress2 = ttk.Progressbar(demo_window, length=300, mode="determinate", maximum=100, value=0)
     progress2.grid(row=4, column=0, padx=10, pady=5)
 
     current_label2 = tk.Label(demo_window, text="", padx=10)
@@ -147,7 +146,6 @@ def confirm():
         progress1.grid_forget()
         frame_label1.config(text="Interpolazione di frame completata", font=("Arial", 12))
         if interpolationFirst: 
-            progress2.start()
             if platform.system() == "Windows":
                 global outputPath1
                 os.startfile(outputPath1)
@@ -165,7 +163,6 @@ def confirm():
                 global outputPath2
                 os.startfile(outputPath2)
         else:
-            progress1.start()
             if platform.system() == "Windows":
                 global outputPath3
                 os.startfile(outputPath3)
@@ -180,22 +177,11 @@ def confirm():
         except Exception as e:
             print(f"Errore durante l'elaborazione del video: {str(e)}")
             time.sleep(1)
-            try:
-                progress1.stop()
-                progress2.stop()
-                print(f"Progress bars chiuse.: {e}")
-            except Exception as e:
-                print(f"Progress bars già chiuse.: {e}")
 
 
     processing_thread = threading.Thread(target=start_processing)
     processing_thread.daemon = True
     processing_thread.start()
-
-    if interpolationFirst: 
-        progress1.start()
-    else:
-        progress2.start()
             
     # def on_closing():
     #     if processing_thread.is_alive():
@@ -295,7 +281,8 @@ def selectFilterType():
     else:
         preset_filter_menu.grid_forget()
         global selectedfilter
-        selectedfilter = filters["Default"].copy()
+        # selectedfilter = filters["Default"].copy()
+        updateView()
         params_frame.grid(columnspan=2, padx=30, sticky="we")
        
 
@@ -319,13 +306,7 @@ def change_order(value):
 def show_documentation():
     webbrowser.open("documentation\documentation.html")
 
-############################################################################################    Stile
-
-
-
-
-
-
+############################################################################################    Graphics elements
 
 window = tk.Tk()
 window.geometry("1280x720")
@@ -450,7 +431,6 @@ params_frame = tk.Frame(col2)
 params_frame.grid(columnspan=2, padx=30, sticky="we")  
 params_frame.grid_forget() 
 
-input_values = {key: tk.StringVar(value=str(selectedfilter[key])) for key in selectedfilter}
 
 min_value = 0
 max_value = 10
@@ -459,6 +439,14 @@ step = 0.1
 keys = ["blur_k_dim", "blur_sigma_x", "sharp_k_center", "Laplacian_k_size", "threshold_value", "blur_k_dim_2", "blur_sigma_x_2"]
 labels = ["Dimensione kernel primo blurring", "Sigma primo blurring", "Dimensione del kernel di sharpening", "Dimensione del kernel laplaciano (edge detector)", "Soglia di binarizzazione", "Dimensione del kernel secondo blurring", "Sigma secondo blurring"]
 
+input_values = {key: tk.StringVar(value=str(selectedfilter[key])) for key in selectedfilter}
+
+def updateView():
+    global input_values
+    input_values = {key: tk.StringVar(value=str(selectedfilter[key])) for key in selectedfilter}
+    for i, key in enumerate(keys):
+        create_spinbox(key, i + 1)
+
 def create_spinbox(key, row):
     label = ttk.Label(params_frame, text=labels[row-1])
     label.grid(row=row, column=0, pady=5, sticky="w")
@@ -466,10 +454,7 @@ def create_spinbox(key, row):
     spinbox.grid(row=row, column=1, padx=(15, 0), pady=5, sticky="E")
     spinbox.bind("<<Increment>>", lambda event, k=key: update_input_value(k, round(float(spinbox.get())+0.1, 1)))
     spinbox.bind("<<Decrement>>", lambda event, k=key: update_input_value(k, round(float(spinbox.get())-0.1, 1)))
-    spinbox.bind("<KeyRelease>", lambda event, k=key: update_input_value(k, spinbox.get()))
-
-for i, key in enumerate(keys):
-    create_spinbox(key, i + 1)
+    spinbox.bind("<KeyRelease>", lambda event, k=key: update_input_value(k, float(spinbox.get())))
 
 preview_frame = tk.Frame(col3)
 preview_frame.grid(sticky="nsew", padx=20, pady=20)

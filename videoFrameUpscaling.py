@@ -1,7 +1,8 @@
 import cv2
 from BilinearUpscaling import bilinear_upscale
-import os
+import sys
 import numpy as np
+import time
 
 def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIterations, filtersValues, increaseContrast, updateProgress2):
 
@@ -16,9 +17,13 @@ def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIte
     frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     originalFps = int(cap.get(cv2.CAP_PROP_FPS))
 
+    start_time = time.time()
     # Funzione per stampare la % di export
     def loopState(num):
-        os.system('cls' if os.name == 'nt' else 'clear')
+        if num != 0:
+            for _ in range(2):
+                    sys.stdout.write("\033[F")  # Move the cursor up one line
+                    sys.stdout.write("\033[K")  # Clear the line
         print("Video Upscaling: {:.2f}%".format(num / frame_count * 100))
         print("Elaborated frames: ", num , "/", frame_count)
         updateProgress2(num, frame_count)
@@ -34,6 +39,8 @@ def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIte
 
     # Cicla su ogni frame del video
     state = 0
+    # testing
+
     while True:
         if state == 0:
             loopState(0)
@@ -118,4 +125,8 @@ def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIte
     cap.release()
     out.release()
 
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+
     print("Upscaling Completed.")
+    print(f"Tempo impiegato: {elapsed_time} secondi")

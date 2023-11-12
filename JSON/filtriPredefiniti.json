@@ -32,7 +32,7 @@
     "Lights10": {
         "blur_k_dim": 5,
         "blur_sigma_x": 1,
-        "sharp_k_center": 3,
+        "sharp_k_center": 5,
         "Laplacian_k_size": 1,
         "threshold_value": 10,
         "blur_k_dim_2": 5,

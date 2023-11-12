@@ -1,6 +1,5 @@
 from videoFrameInterpolation import frameInterpolation
 from videoFrameUpscaling import video_upscaling
-#from videoFrameInterpolationMultiprocessing import frameInterpolation
 import json
 
 # Per una questione computazionale inverto le operazioni, prima interpolo il frame rate e poi faccio upscaling
