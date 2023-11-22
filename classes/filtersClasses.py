@@ -1,4 +1,4 @@
-from filtersValidator import Filters
+from classes.filtersValidator import Filters
 
 class BlurFilter(Filters):
 # REQUIRES: blur_k_dim is a positive odd integer or None
@@ -12,12 +12,15 @@ class BlurFilter(Filters):
     # Setters
     def set_blur_k_dim(self, value):
         self._blur_k_dim = self._validate_positive_odd_integer(value)
+        print("blur_k_: ", self._blur_k_dim)
 
     def set_blur_sigma_x(self, value):
         self._blur_sigma_x = self._validate_positive_numeric(value)
+        print("blur_sigma_x: ", self._blur_sigma_x)
 
     def set_execution_position(self, value):
         self._execution_position = value
+        print("execution_position: ", self._execution_position)
 
 class SharpenFilter(Filters):
 # REQUIRES: sharp_k_center is a positive odd integer or None
@@ -29,9 +32,11 @@ class SharpenFilter(Filters):
     # Setters
     def set_sharp_k_center(self, value):
         self._sharp_k_center = self._validate_positive_odd_integer(value)
+        print("sharp_k_center: ", self._sharp_k_center)
 
     def set_execution_position(self, value):
         self._execution_position = value
+        print("execution_position: ", self._execution_position)
 
 class EdgeDetectorFilter(Filters):
 # REQUIRES: Laplacian_k_size is a positive odd integer or None
@@ -45,12 +50,15 @@ class EdgeDetectorFilter(Filters):
     # Setters
     def set_Laplacian_k_size(self, value):
         self._Laplacian_k_size = self._validate_positive_odd_integer(value)
+        print("Laplacian_k_size: ", self._Laplacian_k_size)
 
     def set_show_edges(self, value):
         self._show_edges = self._validate_boolean(value)
+        print("show_edges: ", self._show_edges)
 
     def set_execution_position(self, value):
         self._execution_position = value
+        print("execution_position: ", self.set_execution_position)
 
 class BinarizationFilter(Filters):
 # REQUIRES: threshold_value is a numeric value or None
@@ -62,9 +70,11 @@ class BinarizationFilter(Filters):
     # Setters
     def set_threshold_value(self, value):
         self._threshold_value = self._validate_numeric(value)
+        print("threshold_value: ", self._threshold_value)
 
     def set_execution_position(self, value):
         self._execution_position = value
+        print("execution_position: ", self._execution_position)
 
     
 class MedianDenoisingFilter(Filters):
@@ -77,6 +87,19 @@ class MedianDenoisingFilter(Filters):
     # Setters
     def set_blur_k_dim_2(self, value):
         self._blur_k_dim_2 = self._validate_positive_odd_integer(value)
+        print("blur_k_dim_2: ", self._blur_k_dim_2)
 
     def set_execution_position(self, value):
         self._execution_position = value
+        print("execution_position: ", self._execution_position)
+
+class ActiveFilters:
+    def __init__(self, blurParams=None, sharpParams=None, edgeParams=None, binarizationParams=None, medianDenoisingParams=None):
+        self.blurParams = blurParams or BlurFilter()
+        self.sharpParams = sharpParams or SharpenFilter()
+        self.edgeParams = edgeParams or EdgeDetectorFilter()
+        self.binarizationParams = binarizationParams or BinarizationFilter()
+        self.medianDenoisingParams = medianDenoisingParams or MedianDenoisingFilter()
+
+
+
