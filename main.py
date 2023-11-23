@@ -21,12 +21,9 @@ iterations = 1
 numFrameInterpol = 3
 zoom_factor = 1.5
 selectedfilter = {
-    "blur_k_dim": 5,
-    "blur_sigma_x": 1,
+    "sharp_k_dim": 3,
     "sharp_k_center": 7,
-    "Laplacian_k_size": 3,
-    "threshold_value": 30,
-    "blur_k_dim_2": 3,
+    "median_blur_dim": 3,
     "showEdges": False
 }
 interpolationFirst = False
@@ -435,8 +432,8 @@ min_value = 0
 max_value = 10
 step = 0.1
 
-keys = ["blur_k_dim", "blur_sigma_x", "sharp_k_center", "Laplacian_k_size", "threshold_value", "blur_k_dim_2"]
-labels = ["Dimensione del kernel id blurring", "Sigma di blurring", "Dimensione del kernel di sharpening", "Dimensione del kernel laplaciano (edge detector)", "Soglia di binarizzazione", "Dimensione del kernel di Denoising"]
+keys = ["sharp_k_dim", "sharp_k_center", "median_blur_dim"]
+labels = ["Dimensione del kernel di sharpening", "Valore centrale del kernel di sharpening", "Dimensione del kernel di Denoising Mediano"]
 
 input_values = {key: tk.StringVar(value=str(selectedfilter[key])) for key in selectedfilter}
 

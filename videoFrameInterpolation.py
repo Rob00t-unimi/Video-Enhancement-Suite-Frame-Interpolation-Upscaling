@@ -6,7 +6,7 @@ import time
 def frameInterpolation(input_video_path, output_video_path, num_adding_frames, updateProgress1, filtersValues):
     #NumAdiingFrames --> elaborazione di n frames tra ogni coppia di frame originali, gli originali vengono scartati
 
-    blur_k_dim_2 = filtersValues["blur_k_dim_2"]
+    blur_k_dim_2 = filtersValues["median_blur_dim"]
 
     capture = cv2.VideoCapture(input_video_path)
 

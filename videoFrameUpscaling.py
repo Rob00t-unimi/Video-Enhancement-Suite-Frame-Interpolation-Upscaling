@@ -2,7 +2,9 @@ import cv2
 from BilinearUpscaling import bilinear_upscale
 import sys
 import numpy as np
-import time
+import time 
+import skimage
+from skimage import filters, color, feature
 
 def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIterations, filtersValues, increaseContrast, updateProgress2):
 
@@ -62,30 +64,25 @@ def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIte
         if filtersValues is not None:
 
             #estraggo le informazioni da applicare ai filtri:
-            blur_k_dim = filtersValues["blur_k_dim"]
-            blur_sigma_x = filtersValues["blur_sigma_x"]
             sharp_k_center = filtersValues["sharp_k_center"]
-            Laplacian_k_size = filtersValues["Laplacian_k_size"]
-            threshold_value = filtersValues["threshold_value"]
-                
-            # Applica il filtro bilaterale a upscaledImage (blurring)
-            blurred_image = cv2.GaussianBlur(tmp, (blur_k_dim, blur_k_dim), blur_sigma_x)      # smoothing
+            sharp_k_dim = int(filtersValues["sharp_k_dim"])
 
-            # Applico lo sharpening all'immagine upscalata
-            sh_val = (sharp_k_center - 1)/8
-            sharpening_kernel = np.array([[-sh_val, -sh_val, -sh_val],
-                                        [-sh_val, sharp_k_center, -sh_val],
-                                        [-sh_val, -sh_val, -sh_val]], dtype=np.float32)
+            # Applico lo sharpening all'immagine upscalata            
+            sh_val = (sharp_k_center - 1)/(sharp_k_dim * sharp_k_dim -1)          
+
+            sharpening_kernel = np.zeros((sharp_k_dim, sharp_k_dim), dtype=np.float32)
+            for i in range(sharp_k_dim):
+                for j in range(sharp_k_dim):
+                    sharpening_kernel[i][j] = - sh_val
+            sharpening_kernel[sharp_k_dim//2, sharp_k_dim//2] = sharp_k_center
+
             sharpened_image = cv2.filter2D(tmp, -1, sharpening_kernel, borderType=cv2.BORDER_DEFAULT)
+           
 
-            # Edge detector dell'immagine upscalata
-            laplacian = cv2.Laplacian(tmp, cv2.CV_16S, ksize=Laplacian_k_size)
-            laplacian = cv2.convertScaleAbs(laplacian)
+            gray_img = color.rgb2gray(tmp)
+            binary_mask = feature.canny(gray_img)
 
-            # Creo un'immagine binarizzata da usare come maschera a partire dall'edge detector
-            _, binary_mask = cv2.threshold(laplacian, threshold_value, 255, cv2.THRESH_BINARY)
-
-            result = blurred_image.copy()
+            result = tmp.copy()
 
             # Sostituisci solo gli edge rilevati dalla maschera binaria con gli edge sharpened
             if filtersValues["showEdges"] is False:
