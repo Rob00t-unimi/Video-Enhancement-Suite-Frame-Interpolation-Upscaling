@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Frame Interpolation and Video Upscaling Project</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -7,130 +8,148 @@
         /* Your custom styles here */
     </style>
 </head>
+
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="documentationITA.html"><img src="flags.png" alt="flags" style="height: 30px;"> English</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="mt-5">
+            <h1 class="text-center">Frame Interpolation and Video Upscaling/Enhancement Project</h1>
+        </div>
+        <p class="mt-3 text-center">By Roberto Tallarini, Lorenzo Gerosa & Gianluca Mariani</p>
 
-<div class="container">
-    <div class="mt-5"><h1 class="text-center">Frame Interpolation and Video Upscaling Project</h1></div>
-    <p class="mt-3 text-center"> By Roberto Tallarini, Lorenzo Gerosa & Gianluca Mariani</p>
+        <h3 class="mt-5">Processing Steps:</h3>
+        <ul>
+            <li>
+                <h5>Frame Interpolation</h5>
+            </li>
+            <ol>
+                <li><code>demo.py</code> passes the video path to the frame interpolation function.</li>
+                <li>The video interpolation function increases the frame count by calculating optical flow between consecutive frames both forward and backward, and then interpolates N new frames between each pair of frames.</li>
+                <li>The original frames are discarded.</li>
+                <li>The video is saved.</li>
+            </ol>
 
-    <h3 class="mt-5">Processing Steps:</h3>
-    <ul>
-    <li><h5>Frame Interpolation</h5></li>
-    <ol>
-        <li><code>demo.py</code> passes the video's path to the frame interpolation function.</li>
-        <li>The video interpolation function increases the number of frames by first calculating optical flow between frame pairs both forward and backward, and then interpolating N new frames between each frame pair</li>
-        <li>The original frames are discarded.</li>
-        <li>The video is saved.</li>
-    </ol>
+            <li>
+                <h5>Video Upscaling</h5>
+            </li>
+            <ol start="5">
+                <li><code>demo.py</code> calls the video upscaling function, passing the video path. For each frame, the function invokes the bilinear upscaling function.</li>
+                <li>Once a frame is upscaled, image enhancement filters are applied, and the frame is saved in the new video until completion.</li>
+            </ol>
 
-    <li><h5>Video Upscaling</h5></li>
-    <ol start="5">
-        <li><code>demo.py</code> calls the video upscaling function, passing it the path of the interpolated video. For each frame, the function invokes the bilinear upscaling function.</li>
-        <li>Once a frame has been upscaled filters are applied, and the frame is saved to the new video until completion.</li>
-    </ol>
+            <li>
+                <h5>End of the System</h5>
+            </li>
+        </ul>
 
-    <li><h5>End of System</h5></li></ul>
+        <div class="mt-5 border p-3 rounded">
+            <h2>Legend:</h2>
 
-    <div class="mt-5 border p-3 rounded">
-    <h2>Legend:</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>"Interpolation First" Switch:</strong>
+                    <p class="description">Allows choosing whether to perform frame interpolation or upscaling first. By default, upscaling is performed first. From a computational perspective, it is more resource-intensive to upscale first and then interpolate the frame rate, but it yields better results.</p>
+                </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            <strong>Interpolation First Toggle:</strong>
-            <p class="description">Allows choosing whether to perform frame interpolation or upscaling first. By default, frame interpolation is done first. Computationally, it's more expensive to upscale first and then interpolate the frame rate.</p>
+                <div class="col-md-6">
+                    <strong>Zoom Factor:</strong>
+                    <p class="description">A decimal number defining the scaling factor.</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Upscaling Iterations:</strong>
+                    <p class="description">An integer indicating the number of upscaling iterations to perform. The resolution after upscaling is the initial resolution * (<em>zoom factor</em> <sup>upscaling iterations</sup>).</p>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Number of Frames to Interpolate:</strong>
+                    <p class="description">An integer indicating the number of frames to interpolate between each pair of frames (original frames are discarded). The final frames per second after interpolation is the number of frames to interpolate * (initial frame count - 1).</p>
+                </div>
+            </div>
+            <hr class="border">
+            <h3 class="mt-5">Filters</h3>
+            <p>During upscaling, enhancements are applied, including Gaussian blurring, Laplacian edge detection, and sharpening. All these filters are considered as a single filter in the graphical interface and applied sequentially according to an optimal algorithm. However, parameter customization is possible.</p>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Select a Default Filter:</strong>
+                    <p class="description">Allows choosing from a set of default filters written for specific videos during testing.</p>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Customize the Filter:</strong>
+                    <p class="description">Allows customizing the parameters of the mentioned filters.</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Show Edges:</strong>
+                    <p class="description">Keep this option disabled. In testing, it allows enabling or disabling the display of overlaid edge detection on the image.</p>
+                </div>
+            </div>
+            <hr class="border">
+            <h3 class="mt-5">Filter Parameters:</h3>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Gaussian Blurring Kernel Size:</strong>
+                    <p class="description">This parameter represents the size of the kernel used to apply the blurring filter in the initial stage of upscaling. The kernel size influences the degree of blurring applied to the image. Larger values generate more intense blurring.</p>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Gaussian Blurring Sigma X:</strong>
+                    <p class="description">Sigma X is a parameter of the blurring filter that affects the standard deviation of the Gaussian used for blurring. Higher Sigma X values generate more diffuse blurring, while lower values create more localized blurring. It is important that the sigma value is proportional to the kernel size.</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Sharpening Kernel Central Value:</strong>
+                    <p class="description">This parameter represents the central value of the kernel used to enhance image sharpness during upscaling. Increasing or decreasing the central value influences the intensity of the applied sharpness boost. Every other kernel value is calculated with equal intensity to always result in a sum of 1.</p>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Laplacian Kernel Size:</strong>
+                    <p class="description">The size of the Laplacian kernel affects image sharpness and can be adjusted to achieve more or less intense edge detection effects.</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Binarization Threshold:</strong>
+                    <p class="description">This parameter controls the threshold value used during the image binarization process. Binarization is a process that converts the image into binary form, where pixels above the threshold are considered edges. Adjusting the threshold value determines how many edges are included in the final image.</p>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Median Blurring Kernel Size for Denoising:</strong>
+                    <p class="description">This parameter represents the size of the kernel used to apply the median blurring filter during frame interpolation to remove impulse noise, salt, and pepper noise.</p>
+                </div>
+            </div>
         </div>
 
-        <div class="col-md-6">
-            <strong>Zoom Factor:</strong>
-            <p class="description">A decimal number that defines the upscaling factor.</p>
-        </div>
+        <p class="mt-5">Coded by Roberto Tallarini</p>
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            <strong>Upscaling Iterations:</strong>
-            <p class="description">An integer indicating the number of upscaling iterations to perform. The resolution after upscaling is the initial resolution * (<em>zoom factor</em> <sup>upscale iterations</sup>).</p>
-        </div>
-
-        <div class="col-md-6">
-            <strong>Number of Frames to Interpolate:</strong>
-            <p class="description">An integer indicating the number of frames to interpolate between each frame pair (original frames are discarded). The final FPS after interpolation is the number of frames to interpolate * (initial frame count - 1).</p>
-        </div>
-    </div>
-    <hr class="border">
-    <h3 class="mt-5">Filters</h3>
-    <p>During upscaling, image enhancements are applied, including blurring, Laplacian edge detection, and sharpening. All these filters are considered as a single filter in the graphical interface and applied in sequence according to an optimal algorithm. However, you can customize the parameters.</p>
-
-    <div class="row">
-        <div class="col-md-6">
-            <strong>Select a Preset Filter:</strong>
-            <p class="description">Allows you to choose from a series of predefined filters.</p>
-        </div>
-
-        <div class="col-md-6">
-            <strong>Customize Filter:</strong>
-            <p class="description">Enables you to customize the parameters of the mentioned filters.</p>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <strong>Show Edges:</strong>
-            <p class="description">Keeping this option off allows enabling or disabling the visualization of overlaid edge detection on the image.</p>
-        </div>
-    </div>
-    <hr class="border">
-    <h3 class="mt-5">Filter Parameters:</h3>
-
-    <div class="row">
-        <div class="col-md-6">
-            <strong>Kernel Size of First Applied Blurring:</strong>
-            <p class="description">This parameter represents the kernel size used to apply the blurring filter in the first stage of upscaling. The kernel size influences the degree of blurriness applied to the image. Larger values generate more intense blurriness.</p>
-        </div>
-
-        <div class="col-md-6">
-            <strong>Sigma X of First Applied Blurring:</strong>
-            <p class="description">Sigma X is a parameter of the blurring filter that affects the standard deviation of the Gaussian used for blurring. Higher Sigma X values generate more diffused blurriness, while lower values create more localized blurriness.</p>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <strong>Central Value of Sharpening Kernel:</strong>
-            <p class="description">This parameter represents the central value of the kernel used to enhance image sharpness during upscaling. Increasing or decreasing the central value will affect the intensity of sharpening enhancement applied to the image.</p>
-        </div>
-
-        <div class="col-md-6">
-            <strong>Central Value of Laplacian Kernel:</strong>
-            <p class="description">The central value of the Laplacian kernel affects image sharpness and can be adjusted to achieve more or less intense edge detection effects. Increasing the central value can increase edge emphasis.</p>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <strong>Binarization Threshold:</strong>
-            <p class="description">This parameter controls the threshold value used during the image binarization process. Binarization is a process that converts the image into binary form, where pixels above the threshold are considered edges. Adjusting the threshold value determines how many edges are included in the final image.</p>
-        </div>
-
-        <div class="col-md-6">
-            <strong>Kernel Size of Second Applied Blurring:</strong>
-            <p class="description">This parameter represents the kernel size used to apply the blurring filter in the second stage of upscaling. This stage can be used to apply additional blurriness to the image, if necessary. The kernel size influences the degree of blurriness applied.</p>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <strong>Sigma X of Second Applied Blurring:</strong>
-            <p class="description">Sigma X is the parameter of the blurring filter used in the second stage of upscaling. Adjusting this value will influence the standard deviation of the Gaussian used for blurring in the second stage. Higher values generate more diffused blurriness, while lower values create more localized blurriness.</p>
-        </div>
-    </div>
-</div>
-
-    <p class="mt-5">Coded by Roberto Tallarini</p>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

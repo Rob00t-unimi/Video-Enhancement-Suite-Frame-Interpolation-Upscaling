@@ -436,7 +436,7 @@ max_value = 10
 step = 0.1
 
 keys = ["blur_k_dim", "blur_sigma_x", "sharp_k_center", "Laplacian_k_size", "threshold_value", "blur_k_dim_2"]
-labels = ["Dimensione del kernel id blurring", "Sigma di blurring", "Dimensione del kernel di sharpening", "Dimensione del kernel laplaciano (edge detector)", "Soglia di binarizzazione", "Dimensione del kernel di Denoising"]
+labels = ["Dimensione del kernel id blurring", "Sigma di blurring", "Centro del kernel di sharpening", "Dimensione del kernel laplaciano (edge detector)", "Soglia di binarizzazione", "Dimensione del kernel di Denoising"]
 
 input_values = {key: tk.StringVar(value=str(selectedfilter[key])) for key in selectedfilter}
 

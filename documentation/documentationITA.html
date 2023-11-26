@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Progetto di Interpolazione dei Frame e Ingrandimento Video</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* I tuoi stili personalizzati qui */
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="documentation.html"><img src="flags.png" alt="flags" style="height: 30px;"> Italiano</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="mt-5">
+            <h1 class="text-center">Progetto di Interpolazione dei Frame e Video Upscaling/enhancement</h1>
+        </div>
+        <p class="mt-3 text-center">Di Roberto Tallarini, Lorenzo Gerosa & Gianluca Mariani</p>
+
+        <h3 class="mt-5">Passaggi di Elaborazione:</h3>
+        <ul>
+            <li>
+                <h5>Interpolazione dei Frame</h5>
+            </li>
+            <ol>
+                <li><code>demo.py</code> passa il percorso del video alla funzione di interpolazione dei frame.</li>
+                <li>La funzione di interpolazione del video aumenta il numero di frame calcolando prima il flusso ottico tra le coppie di frame in avanti e all'indietro, e quindi interpolando N nuovi frame tra ogni coppia di frame.</li>
+                <li>I frame originali vengono scartati.</li>
+                <li>Il video viene salvato.</li>
+            </ol>
+
+            <li>
+                <h5>Video Upscaling</h5>
+            </li>
+            <ol start="5">
+                <li><code>demo.py</code> chiama la funzione di ingrandimento video, passandogli il percorso del video. Per ogni frame, la funzione invoca la funzione di upscaling bilineare.</li>
+                <li>Una volta che un frame è stato ingrandito, vengono applicati filtri di enhancement dell'immagine, e il frame viene salvato nel nuovo video fino al completamento.</li>
+            </ol>
+
+            <li>
+                <h5>Fine del Sistema</h5>
+            </li>
+        </ul>
+
+        <div class="mt-5 border p-3 rounded">
+            <h2>Legenda:</h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Interruttore "Interpolation First":</strong>
+                    <p class="description">Permette di scegliere se effettuare prima l'interpolazione dei frame o l'ingrandimento. Per default, l'upscaling viene eseguito per primo. Dal punto di vista computazionale, è più dispendioso fare prima l'ingrandimento e poi interpolare il frame rate ma restituisce risultati migliori.</p>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Zoom Factor:</strong>
+                    <p class="description">Un numero decimale che definisce il fattore di ingrandimento.</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Iterazioni di Ingrandimento:</strong>
+                    <p class="description">Un numero intero che indica il numero di iterazioni di ingrandimento da eseguire. La risoluzione dopo l'ingrandimento è la risoluzione iniziale * (<em>fattore di zoom</em> <sup>iterazioni di ingrandimento</sup>).</p>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Numero di Frame da Interpolare:</strong>
+                    <p class="description">Un numero intero che indica il numero di frame da interpolare tra ogni coppia di frame (i frame originali vengono scartati). Il numero finale di fotogrammi al secondo dopo l'interpolazione è il numero di frame da interpolare * (conteggio iniziale dei frame - 1).</p>
+                </div>
+            </div>
+            <hr class="border">
+            <h3 class="mt-5">Filtri</h3>
+            <p>Durante l'ingrandimento, vengono applicati miglioramenti all'immagine, tra cui blurring Gaussiano, Edge detection Laplaciano e Sharpening. Tutti questi filtri sono considerati come un unico filtro nell'interfaccia grafica e vengono applicati in sequenza secondo un algoritmo ottimale. Tuttavia, è possibile personalizzare i parametri.</p>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Seleziona un Filtro Predefinito:</strong>
+                    <p class="description">Permette di scegliere tra una serie di filtri predefiniti che abbiamo scritto per video specifici in fase di testing.</p>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Personalizza il Filtro:</strong>
+                    <p class="description">Consente di personalizzare i parametri dei filtri menzionati.</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Show Edges:</strong>
+                    <p class="description">Mantenere questa opzione disattivata. Consente in fase di test di abilitare o disabilitare la visualizzazione del rilevamento dei bordi sovrapposti sull'immagine.</p>
+                </div>
+            </div>
+            <hr class="border">
+            <h3 class="mt-5">Parametri del Filtro:</h3>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Dimesione del Kernel del Blurring Gaussiano:</strong>
+                    <p class="description">Questo parametro rappresenta la dimensione del kernel utilizzato per applicare il filtro di sfocatura nella prima fase dell'ingrandimento. La dimensione del kernel influenza il grado di sfocatura applicato all'immagine. Valori più grandi generano una sfocatura più intensa.</p>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Sigma X del Blurring Gaussiano:</strong>
+                    <p class="description">Sigma X è un parametro del filtro di sfocatura che influisce sulla deviazione standard della Gaussiana utilizzata per la sfocatura. Valori più alti di Sigma X generano una sfocatura più diffusa, mentre valori più bassi creano una sfocatura più localizzata. è importante che il valore di sigma sia proporzionale alla dimensione del kernel</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Valore Centrale del Kernel di Sharpening:</strong>
+                    <p class="description">Questo parametro rappresenta il valore centrale del kernel utilizzato per migliorare la nitidezza dell'immagine durante l'ingrandimento. Aumentare o diminuire il valore centrale influenzerà l'intensità dell'aumento di nitidezza applicato all'immagine. Ogni altro valore del kernel viene calcolato con uguale intensità per dare come risultato sempre somma 1</p>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Dimensione del Kernel Laplaciano:</strong>
+                    <p class="description">La dimensione del kernel di Laplaciano influisce sulla nitidezza dell'immagine e può essere regolato per ottenere effetti di rilevamento dei bordi più o meno intensi.</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Soglia di Binarizzazione:</strong>
+                    <p class="description">Questo parametro controlla il valore di soglia utilizzato durante il processo di binarizzazione dell'immagine. La binarizzazione è un processo che converte l'immagine in forma binaria, dove i pixel sopra la soglia sono considerati bordi. Regolare il valore di soglia determina quanti bordi sono inclusi nell'immagine finale.</p>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Dimesione del Kernel di Blurring mediano Per denoising:</strong>
+                    <p class="description">Questo parametro rappresenta la dimensione del kernel utilizzato per applicare il filtro di blurring mediano durante l'interpolazione dei frame cosi da rimuovere rumore impulsivo, e sale e pepe. </p>
+                </div>
+            </div>
+        </div>
+
+        <p class="mt-5">Codificato da Roberto Tallarini</p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
