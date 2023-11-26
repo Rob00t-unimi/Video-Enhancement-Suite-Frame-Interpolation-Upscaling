@@ -51,8 +51,8 @@ def bilinear_upscale (frame, zoom_factor):
     def cv2Upscale(img, zoom_factor):
         new_width = int(img.shape[1] * zoom_factor)
         new_height = int(img.shape[0] * zoom_factor)
-        upscaled_image = cv2.resize(img, (new_width, new_height))
-        #upscaled_image = cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_CUBIC)     # --> Bicubico di cv2 è più preciso
+        upscaled_image = cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_LINEAR)
+        # upscaled_image = cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_CUBIC)     # --> Bicubico di cv2 è più preciso
         return upscaled_image
     
     upscaledImage = cv2Upscale(frame, zoom_factor)
