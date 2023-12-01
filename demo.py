@@ -1,18 +1,48 @@
 from videoFrameInterpolation import frameInterpolation
 from videoFrameUpscaling import video_upscaling
 import json
+import os
 
 # Per una questione computazionale inverto le operazioni, prima interpolo il frame rate e poi faccio upscaling
 
 def start(selected_video, iterazioniUpscaling, numInterpolateFrames, zoom_factor, filtersValues, updateProgress1, updateProgress2, interpolationFirst): 
 
-    with open('JSON/outputPath.json', 'r') as json_file:
-        data = json.load(json_file)
-        global outputPath1, outputPath3, outputPath4, outputPath5
-        outputPath1 = data["outputpath1"]
-        outputPath2 = data["outputPath2"]
-        outputPath3 = data["outputPath3"]
-        outputPath4 = data["outputPath4"]
+    n = 0
+    dir = os.path.dirname(selected_video)   
+
+    while True:
+        # Generate file paths
+        outputPath1 = os.path.join(dir, f"InterpolatedVideo{n}.mp4")
+        outputPath2 = os.path.join(dir, f"InterpolatedVideo-Upscaled{n}.mp4")
+        outputPath3 = os.path.join(dir, f"UpscaledVideo{n}.mp4")
+        outputPath4 = os.path.join(dir, f"UpscaledVideo-Interpolated{n}.mp4")
+
+        # Check if any of the files already exist
+        if not (
+            os.path.exists(outputPath1)
+            or os.path.exists(outputPath2)
+            or os.path.exists(outputPath3)
+            or os.path.exists(outputPath4)
+        ):
+            break
+
+        # If any file exists, increment n and try again
+        n += 1
+    
+    outputPath1 = os.path.join(dir, f"InterpolatedVideo{n}.mp4")
+    outputPath2 = os.path.join(dir, f"InterpolatedVideo-Upscaled{n}.mp4")
+    outputPath3 = os.path.join(dir, f"UpscaledVideo{n}.mp4")
+    outputPath4 = os.path.join(dir, f"UpscaledVideo-Interpolated{n}.mp4")
+    
+
+# # path selection by JSON
+#     with open('JSON/outputPath.json', 'r') as json_file:
+#         data = json.load(json_file)
+#         global outputPath1, outputPath3, outputPath4, outputPath5
+#         outputPath1 = data["outputpath1"]
+#         outputPath2 = data["outputPath2"]
+#         outputPath3 = data["outputPath3"]
+#         outputPath4 = data["outputPath4"]
 
     # #Parametri
     # zoom_factor = 1.5  # fattore di upscaling desiderato
