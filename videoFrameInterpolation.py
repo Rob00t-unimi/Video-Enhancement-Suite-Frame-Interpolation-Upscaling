@@ -2,11 +2,12 @@ import cv2
 import numpy as np
 import sys
 import time
+import imageio
 
 def frameInterpolation(input_video_path, output_video_path, num_adding_frames, updateProgress1, filtersValues):
     #NumAdiingFrames --> elaborazione di n frames tra ogni coppia di frame originali, gli originali vengono scartati
 
-    blur_k_dim_2 = filtersValues["blur_k_dim_2"]
+    blur_k_dim_2 = int(filtersValues["blur_k_dim_2"])
 
     capture = cv2.VideoCapture(input_video_path)
 
@@ -28,8 +29,10 @@ def frameInterpolation(input_video_path, output_video_path, num_adding_frames, u
     frame_size = (dWidth, dHeight)
 
     # Set del writer del nuovo video con codec XVID, captures e frame size calcolate
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter(output_video_path, fourcc, finalFps, frame_size, isColor=True)
+    # fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    # out = cv2.VideoWriter(output_video_path, fourcc, finalFps, frame_size, isColor=True)
+
+    out = imageio.get_writer(output_video_path, fps=finalFps, quality=8, codec='h264')
 
     prev_frame = None   # parto dal primo frame quindi setto il precedente a None
 
@@ -72,10 +75,10 @@ def frameInterpolation(input_video_path, output_video_path, num_adding_frames, u
 
             y, x = np.indices(frame.shape[:2])
 
+            part = 1/num_adding_frames
+            
             # Ciclo che ad ogni iterazione produce 1 frame interpolato e lo scrive nel video finale
             for t in range(num_adding_frames):
-
-                part = 1/num_adding_frames
 
                 # Al posto di iterare pixel per pixel uso la possibilità di numpy di svolgere operazioni su interi array
                 # Ho rimosso 2 cicli e abbattuto drasticamente il carico computazionale
@@ -92,7 +95,12 @@ def frameInterpolation(input_video_path, output_video_path, num_adding_frames, u
 
                 final = cv2.addWeighted(flowf, 1 - part * t, flowb, part * t, 0)
                 final = cv2.medianBlur(final, blur_k_dim_2)    #applica un filtro di denoising per rumore sale e pepe
-                out.write(final)
+                if len(frame.shape)==2:
+                    final = cv2.cvtColor(final, cv2.COLOR_BGR2GRAY)
+                else:
+                    final = cv2.cvtColor(final, cv2.COLOR_BGR2RGB)
+                # out.write(final)
+                out.append_data(final)
                 state += 1
                 loopState(state)  # ad ogni scrittura di un nuovo frame aggiorna la % di export
 
@@ -100,7 +108,8 @@ def frameInterpolation(input_video_path, output_video_path, num_adding_frames, u
 
     # Ho finito, rilascio la capture del video
     capture.release()
-    out.release()
+    # out.release()
+    out.close()
 
     # Richiedo le capture del video appena creato e stampo le informazioni che voglio vedere
     capture = cv2.VideoCapture(output_video_path)

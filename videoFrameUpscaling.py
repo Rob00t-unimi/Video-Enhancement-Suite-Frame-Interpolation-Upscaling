@@ -3,6 +3,7 @@ from BilinearUpscaling import bilinear_upscale
 import sys
 import numpy as np
 import time
+import imageio
 
 def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIterations, filtersValues, increaseContrast, updateProgress2):
 
@@ -33,9 +34,10 @@ def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIte
     dHeight = int(int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))*(zoom_factor**upscaleIterations))
     frame_size = (dWidth, dHeight)
 
-    # Crea un oggetto VideoWriter per scrivere il video di output
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter(output_video_path, fourcc, originalFps, frame_size, isColor=True)
+    # # Crea un oggetto VideoWriter per scrivere il video di output
+    # fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    # out = cv2.VideoWriter(output_video_path, fourcc, originalFps, frame_size, isColor=True)
+    out = imageio.get_writer(output_video_path, fps=originalFps, quality=8, codec='h264')
 
     # Cicla su ogni frame del video
     state = 0
@@ -62,11 +64,11 @@ def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIte
         if filtersValues is not None:
 
             #estraggo le informazioni da applicare ai filtri:
-            blur_k_dim = filtersValues["blur_k_dim"]
+            blur_k_dim = int(filtersValues["blur_k_dim"])
             blur_sigma_x = filtersValues["blur_sigma_x"]
             sharp_k_center = filtersValues["sharp_k_center"]
-            Laplacian_k_size = filtersValues["Laplacian_k_size"]
-            threshold_value = filtersValues["threshold_value"]
+            Laplacian_k_size = int(filtersValues["Laplacian_k_size"])
+            threshold_value = int(filtersValues["threshold_value"])
                 
             # Applica il filtro bilaterale a upscaledImage (blurring)
             blurred_image = cv2.GaussianBlur(tmp, (blur_k_dim, blur_k_dim), blur_sigma_x)      # smoothing
@@ -114,13 +116,21 @@ def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIte
             filteredImage = contrastedImage
 
         # Scrivi il frame elaborato nel video di output
-        out.write(filteredImage)
+        # out.write(filteredImage)
+
+        if len(frame.shape)==2:
+            filteredImage = cv2.cvtColor(filteredImage, cv2.COLOR_BGR2GRAY)
+        else:
+            filteredImage = cv2.cvtColor(filteredImage, cv2.COLOR_BGR2RGB)
+
+        out.append_data(filteredImage)
         state += 1
         loopState(state)
 
     # Rilascia la capture
     cap.release()
-    out.release()
+    # out.release()
+    out.close()
 
     end_time = time.time()
     elapsed_time = end_time - start_time

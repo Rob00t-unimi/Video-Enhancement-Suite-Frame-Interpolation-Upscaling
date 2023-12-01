@@ -5,7 +5,7 @@
         "sharp_k_center": 7,
         "Laplacian_k_size": 3,
         "threshold_value": 30,
-        "blur_k_dim_2": 3,
+        "blur_k_dim_2": 5,
         "showEdges": false
     },
     "Lights10": {

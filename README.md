@@ -1,4 +1,4 @@
-# Project Frame Interpolation and Upscaling for Video
+# Project Motion Frame Interpolation and Upscaling for Video
 
 For computational complexity reasons, it is better to perform frame interpolation first and then upscaling. However, for the best results, it is preferable to apply upscaling first and then frame interpolation.
 
@@ -27,7 +27,7 @@ For computational complexity reasons, it is better to perform frame interpolatio
 
 `main.py` is a GUI that allows you to select the video and the desired enhancement parameters. A button allows you to launch `demo.py` in a new thread.
 
-#### Frame Interpolation:
+#### Motion Frame Interpolation:
 1. `demo.py` passes the video's path to the frame interpolation function.
 2. The video interpolation function increases the number of frames by first calculating the optical flow between frame pairs both forward and backward, then interpolating n new frames between each frame pair.
 3. The original frames are discarded.
@@ -50,7 +50,7 @@ For computational complexity reasons, it is better to perform frame interpolatio
 
 - Final FPS after interpolation:  FPS = numInterpolateFrames * (numFramesIniziale - 1)
 
-- Codec used: XVID
+- Codec used: H.264
 
 - `filterValues` Legend:
 

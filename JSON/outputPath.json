@@ -1,8 +1,9 @@
 
 {
-    "outputpath1": "materials/output/VideoProcessing/FrameInterpolation/InterpolatedVideo.avi",
-    "outputPath2": "materials/output/VideoProcessing/VideoUpscaling/InterpolatedVideo-Upscaled.avi",
-    "outputPath3": "materials/output/VideoProcessing/VideoUpscaling/UpscaledVideo.avi" ,
-    "outputPath4": "materials/output/VideoProcessing/FrameInterpolation/UpscaledVideo-Interpolated.avi",
+    "outputpath1": "materials/output/FrameInterpolation/InterpolatedVideo.mp4",
+    "outputPath2": "materials/output/VideoUpscaling/InterpolatedVideo-Upscaled.mp4",
+    "outputPath3": "materials/output/VideoUpscaling/UpscaledVideo.mp4" ,
+    "outputPath4": "materials/output/FrameInterpolation/UpscaledVideo-Interpolated.mp4",
     "comment": "interpolation first: path1 = salva il video interpolato, path2 = salva il video interpolato e upscalato. upscaling first: path3 = salva il video upscalato, path4 = salva il video upscalato e interpolato"
 }
+

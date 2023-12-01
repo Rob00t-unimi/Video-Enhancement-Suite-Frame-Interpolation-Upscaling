@@ -309,7 +309,7 @@ def show_documentation():
 
 window = tk.Tk()
 window.geometry("1280x720")
-window.title("Frame interpolation and Upscaling")
+window.title("Motion Frame interpolation and Upscaling")
 
 window.grid_rowconfigure(1, weight=1)
 window.grid_columnconfigure(0, weight=1)
@@ -358,12 +358,12 @@ titleLabel.grid(padx=10, pady=10)
 # COL 1
 Order_bool = tk.BooleanVar()
 Order_bool.set(interpolationFirst)
-orderCheckSelection = ttk.Checkbutton(col1, text="Interpolation First", variable=Order_bool, command=lambda: change_order(Order_bool.get()), bootstyle="round-toggle")
+orderCheckSelection = ttk.Checkbutton(col1, text="Esegui prima l'aumento di FPS", variable=Order_bool, command=lambda: change_order(Order_bool.get()), bootstyle="round-toggle")
 orderCheckSelection.grid( sticky="W", padx=20, pady=20)
 
 boolean_var = tk.BooleanVar()
 boolean_var.set(selectedfilter["showEdges"])
-boolean_checkbutton = ttk.Checkbutton(col1, text="Show Edges", variable=boolean_var, command=lambda: update_input_value("showEdges", boolean_var.get()), bootstyle="round-toggle")
+boolean_checkbutton = ttk.Checkbutton(col1, text="Show Edges (Testing)", variable=boolean_var, command=lambda: update_input_value("showEdges", boolean_var.get()), bootstyle="round-toggle")
 boolean_checkbutton.grid( sticky="W", padx=20)
 
 radio_label = tk.Label(col1, text="Seleziona tipo di filtro", font=("Helvetica", 12, "bold"))
