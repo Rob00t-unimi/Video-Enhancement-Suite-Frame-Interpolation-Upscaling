@@ -1,4 +1,5 @@
 import cv2
+import imageio
 
 def resize_video(input_path, output_path, target_fps=10):
     # Apre il video
@@ -15,12 +16,14 @@ def resize_video(input_path, output_path, target_fps=10):
     # Calcola il rapporto di ridimensionamento
     resize_factor = original_fps / target_fps
 
+
     # Ottiene le dimensioni del video originale
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
     # Crea l'oggetto VideoWriter per scrivere il video ridimensionato
-    out = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*'XVID'), target_fps, (width, height))
+    out = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*'mp4v'), target_fps, (width, height))
+    
 
     while True:
         ret, frame = cap.read()
@@ -32,6 +35,12 @@ def resize_video(input_path, output_path, target_fps=10):
         if cap.get(cv2.CAP_PROP_POS_FRAMES) % resize_factor < 1:
             out.write(frame)
 
+    if out.get(cv2.CAP_PROP_POS_MSEC)<10000:
+        cap.set(cv2.CAP_PROP_POS_FRAMES, int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) - 1)
+        ret, frame = cap.read()
+        if ret:
+            out.write(frame)
+        
     # Rilascia le risorse
     cap.release()
     out.release()
@@ -39,8 +48,8 @@ def resize_video(input_path, output_path, target_fps=10):
     print(f"Video ridimensionato con successo a {target_fps} fps. Salvato in {output_path}")
 
 if __name__ == "__main__":
-    input_video_path = r"C:\Users\rober\Desktop\progetto-principi\materials\input\stockVideos\la haine - zoom in\cut_24fps_10sec_720p.mp4"
-    output_video_path = r"C:\Users\rober\Desktop\progetto-principi\materials\input\stockVideos\la haine - zoom in\cut_10fps_10sec_720p.mp4"
+    input_video_path = r"C:\Users\rober\Desktop\MainFolder\UniMi\Percezione\ProjectCode\Originale\progetto-principi\materials\input\drone - zoom and movement\cut-30fps-10sec-720p.mp4"
+    output_video_path = r"C:\Users\rober\Desktop\MainFolder\UniMi\Percezione\ProjectCode\Originale\progetto-principi\materials\input\drone - zoom and movement\cut-10fps-10sec-720p.mp4"
     target_fps = 10
 
     resize_video(input_video_path, output_video_path, target_fps)

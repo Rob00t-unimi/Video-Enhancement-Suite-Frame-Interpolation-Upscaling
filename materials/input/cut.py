@@ -40,7 +40,7 @@ def taglia_e_salva_video(input_path, output_path, inizio, durata):
     out.release()
 
 # Specifica il percorso del video originale
-video_originale_path = r"C:\Users\rober\Desktop\progetto-principi\materials\input\stockVideos\the dark knight - dark on dark\cutted.mp4"
+video_originale_path = r"C:\Users\rober\Downloads\FPV Drone footage Copyright free.mp4"
 
 cartella_path = os.path.dirname(video_originale_path)
 
@@ -48,7 +48,7 @@ cartella_path = os.path.dirname(video_originale_path)
 video_tagliato_path = cartella_path + "\cut.mp4"
 
 # Specifica il punto di inizio e la durata del taglio
-inizio_taglio = 0  # secondi
+inizio_taglio = 144  # secondi
 durata_taglio = 10.0  # secondi
 
 # Esegui la funzione per tagliare e salvare il video

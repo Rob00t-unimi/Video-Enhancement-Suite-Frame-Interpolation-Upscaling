@@ -6,7 +6,7 @@ For computational complexity reasons, it is better to perform frame interpolatio
 #### Used Libraries:
 - OpenCV
 - NumPy
-- imageio
+- imageio-ffmpeg
 - msvcrt
 - os
 - tkinter
