@@ -40,13 +40,6 @@ filters = data
 current_file_path = os.path.abspath(__file__)
 directory_path = os.path.dirname(current_file_path)
 
-with open('JSON/outputPath.json', 'r') as json_file:
-    data = json.load(json_file)
-    outputPath1 = directory_path + "/" + data["outputpath1"]
-    outputPath2 = directory_path + "/" + data["outputPath2"]
-    outputPath3 = directory_path + "/" + data["outputPath3"]
-    outputPath4 = directory_path + "/" + data["outputPath4"]
-
 ############################################################################################    Controllo Multithread
 
 # Funzione per controllare le variabili e stamparle quando cambiano
@@ -144,27 +137,11 @@ def confirm():
     def on_progress1_completion():
         progress1.grid_forget()
         frame_label1.config(text="Interpolazione di frame completata", font=("Arial", 12))
-        if interpolationFirst: 
-            if platform.system() == "Windows":
-                global outputPath1
-                os.startfile(outputPath1)
-        else:
-            if platform.system() == "Windows":
-                global outputPath4
-                os.startfile(outputPath4)
 
 
     def on_progress2_completion():
         progress2.grid_forget()
         frame_label2.config(text="Upscaling completato", font=("Arial", 12))
-        if interpolationFirst: 
-            if platform.system() == "Windows":
-                global outputPath2
-                os.startfile(outputPath2)
-        else:
-            if platform.system() == "Windows":
-                global outputPath3
-                os.startfile(outputPath3)
 
 
     def start_processing():
