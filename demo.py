@@ -3,16 +3,26 @@ from videoFrameUpscaling import video_upscaling
 import json
 import os
 from moviepy.editor import VideoFileClip, clips_array, vfx
+import tkinter as tk
 
+
+def get_screen_dimensions():
+    root = tk.Tk()
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    root.destroy()
+    return screen_width, screen_height
 
 def videoViewer(video_path1, video_path2):
+
+    screen_width, _ = get_screen_dimensions()
 
     # Carica i video
     clip1 = VideoFileClip(video_path1)
     clip2 = VideoFileClip(video_path2)
 
-    clip1_resized = clip1.resize(width=clip1.size[0]/2.5, height=clip1.size[1]/2.5)
-    clip2_resized = clip2.resize(width=clip2.size[0]/2.5, height=clip2.size[1]/2.5)
+    clip1_resized = clip1.resize(width=screen_width/3)
+    clip2_resized = clip2.resize(width=screen_width/3*2)
     
     final_clip = clips_array([[clip1_resized, clip2_resized]])
     final_clip.preview()
@@ -20,8 +30,8 @@ def videoViewer(video_path1, video_path2):
 
     clip1_slow = clip1.fx(vfx.speedx, 0.5)
     clip2_slow = clip2.fx(vfx.speedx, 0.5)
-    clip1_slow_resized = clip1_slow.resize(width=clip1_slow.size[0]/2.5, height=clip1_slow.size[1]/2.5)
-    clip2_slow_resized = clip2_slow.resize(width=clip2_slow.size[0]/2.5, height=clip2_slow.size[1]/2.5)
+    clip1_slow_resized = clip1_slow.resize(width=screen_width/3)
+    clip2_slow_resized = clip2_slow.resize(width=screen_width/3*2)
 
     final_clip = clips_array([[clip1_slow_resized, clip2_slow_resized]])
     final_clip.preview()
