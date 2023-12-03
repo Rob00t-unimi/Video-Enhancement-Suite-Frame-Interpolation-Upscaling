@@ -26,7 +26,6 @@ def frameInterpolation(input_video_path, output_video_path, num_adding_frames, u
     # Estraggo dimensioni dei frame
     dWidth = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
     dHeight = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    frame_size = (dWidth, dHeight)
 
     # Set del writer del nuovo video con codec XVID, captures e frame size calcolate
     # fourcc = cv2.VideoWriter_fourcc(*'XVID')
@@ -34,9 +33,8 @@ def frameInterpolation(input_video_path, output_video_path, num_adding_frames, u
 
     out = imageio.get_writer(output_video_path, fps=finalFps, quality=8, codec='h264')
 
-    prev_frame = None   # parto dal primo frame quindi setto il precedente a None
-
-    # Set di 3 matrici (frame) all zeros
+    
+    # Set di 3 matrici all zeros
     flowf = np.zeros((dHeight, dWidth, 3), dtype=np.uint8)
     flowb = np.zeros((dHeight, dWidth, 3), dtype=np.uint8)
     final = np.zeros((dHeight, dWidth, 3), dtype=np.uint8)
@@ -54,6 +52,8 @@ def frameInterpolation(input_video_path, output_video_path, num_adding_frames, u
         updateProgress1(num, tot_finalFrames)
 
     state = 0
+
+    prev_frame = None   # parto dal primo frame quindi setto il precedente a None
 
     #ciclo che continua finchè caprure read restituisce un frame successivo
     while True:
@@ -75,25 +75,27 @@ def frameInterpolation(input_video_path, output_video_path, num_adding_frames, u
 
             y, x = np.indices(frame.shape[:2])
 
-            part = 1/num_adding_frames
+            
             
             # Ciclo che ad ogni iterazione produce 1 frame interpolato e lo scrive nel video finale
             for t in range(num_adding_frames):
+
+                T = 1/num_adding_frames * t
 
                 # Al posto di iterare pixel per pixel uso la possibilità di numpy di svolgere operazioni su interi array
                 # Ho rimosso 2 cicli e abbattuto drasticamente il carico computazionale
                 # un benchmark ci ha mostrato che con i 2 cicli annidati in 45 minuti ha esportato il 70% dei frames
                 # senza cicli in 44 secondi ha esportato l'intero video
 
-                fy = np.clip(y + fflow[:, :, 1] * part * t, 0, frame.shape[0] - 1).astype(int)
-                fx = np.clip(x + fflow[:, :, 0] * part * t, 0, frame.shape[1] - 1).astype(int)
+                fy = np.clip(y + fflow[:, :, 1] * T, 0, frame.shape[0] - 1).astype(int)
+                fx = np.clip(x + fflow[:, :, 0] * T, 0, frame.shape[1] - 1).astype(int)
                 flowf[fy, fx, :] = prev_frame[y, x]
 
-                by = np.clip(y + bflow[:, :, 1] * (1 - part * t), 0, frame.shape[0] - 1).astype(int)
-                bx = np.clip(x + bflow[:, :, 0] * (1 - part * t), 0, frame.shape[1] - 1).astype(int)
+                by = np.clip(y + bflow[:, :, 1] * (1 - T), 0, frame.shape[0] - 1).astype(int)
+                bx = np.clip(x + bflow[:, :, 0] * (1 - T), 0, frame.shape[1] - 1).astype(int)
                 flowb[by, bx, :] = frame[y, x]
 
-                final = cv2.addWeighted(flowf, 1 - part * t, flowb, part * t, 0)
+                final = cv2.addWeighted(flowf, 1-T, flowb, T, 0)
                 final = cv2.medianBlur(final, blur_k_dim_2)    #applica un filtro di denoising per rumore sale e pepe
                 if len(frame.shape)==2:
                     final = cv2.cvtColor(final, cv2.COLOR_BGR2GRAY)

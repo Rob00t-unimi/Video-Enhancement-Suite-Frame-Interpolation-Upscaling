@@ -29,10 +29,6 @@ def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIte
         print("Elaborated frames: ", num , "/", frame_count)
         updateProgress2(num, frame_count)
 
-    # Estraggo dimensioni dei frame e le moltiplico per il fattore di zoom elevato al numero di iterazioni di upscaling
-    dWidth = int(int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))*(zoom_factor**upscaleIterations))
-    dHeight = int(int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))*(zoom_factor**upscaleIterations))
-    frame_size = (dWidth, dHeight)
 
     # # Crea un oggetto VideoWriter per scrivere il video di output
     # fourcc = cv2.VideoWriter_fourcc(*'XVID')
@@ -70,7 +66,7 @@ def video_upscaling(input_video_path, output_video_path, zoom_factor, upscaleIte
             Laplacian_k_size = int(filtersValues["Laplacian_k_size"])
             threshold_value = int(filtersValues["threshold_value"])
                 
-            # Applica il filtro bilaterale a upscaledImage (blurring)
+            # Applica il filtro gaussiano a upscaledImage (blurring)
             blurred_image = cv2.GaussianBlur(tmp, (blur_k_dim, blur_k_dim), blur_sigma_x)      # smoothing
 
             # Applico lo sharpening all'immagine upscalata
